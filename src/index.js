@@ -12,14 +12,14 @@ const chalk = require("chalk");
 //   console.log(event, path);
 // });
 let dir = "src";
-let watchPath = process.cwd();
-let watchPath2 = `${path.join(process.cwd(), dir)}`;
-let watchPath3 = `${path.join(__dirname, dir)}`;
-chokidar.watch(watchPath).on("change", path => {
-  console.log(chalk.yellow("path"), path);
-});
+let watchPath = path.join(process.cwd(), dir);
+let watchPath2 = __dirname;
+function Protato(directoryToWatch) {
+  chokidar.watch(directoryToWatch).on("change", path => {
+    console.log(chalk.yellow("path"), path);
+  });
+}
 
 // console.log(`Hello ${process.env.SAMPLE_ENV}! from node-starter`);
 console.log(`watchPath: ${watchPath}`);
 console.log(`watchPath2: ${watchPath2}`);
-console.log(`watchPath3: ${watchPath3}`);
