@@ -5,5 +5,5 @@ const log = console.log;
 log(`single`);
 parser(single);
 
-// log(`multiple`);
+log(`multiple`);
 parser(multiple);
