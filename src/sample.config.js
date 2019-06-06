@@ -21,6 +21,9 @@ const multipleA = {
     }
   ]
 };
+
+//TODO: Consider renaming "path" to "parent" and "modules" to "children"
+//? Why: Both "path" and "modules" list paths. Currently, one describes form and another, function
 const singleB = {
   path: "foo/bar",
   modules: ["path/to/module/one", "path/to/module/two"]
@@ -32,8 +35,8 @@ const multipleB = {
       modules: ["path/to/module/one", "path/to/module/two"]
     },
     {
-      path: "foo/baz",
-      modules: ["path/to/module/one", "path/to/module/two"]
+      path: "foo/bazzz",
+      modules: ["path/to/module/three", "path/to/module/four"]
     }
   ]
 };
