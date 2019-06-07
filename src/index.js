@@ -1,4 +1,4 @@
-import { parser } from "./parser";
+import { watcher } from "./parser";
 import { single, multiple } from "./sample.config";
 const log = console.log;
 
