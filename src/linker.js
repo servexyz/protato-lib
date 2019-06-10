@@ -2,7 +2,7 @@ const log = console.log;
 import shell from "shelljs";
 import chalk from "chalk";
 //TODO: Check/throw err if npm not installed
-export async function npmLinker(
+export async function linker(
   szParentDirectory,
   szChildDirectory,
   szChildPackageName

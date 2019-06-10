@@ -1,21 +1,21 @@
 const log = console.log;
 import chalk from "chalk";
-import { single, multiple } from "./sample.config";
 import watcher from "./watcher";
-import generator from "./generator";
 
-export function parser(oConfig, fnGenerator) {
+export function parser(oConfig, fnLinker) {
   if (isConfigSingular(oConfig)) {
-    const { path, modules } = oConfig;
+    // const { path, modules } = oConfig;
+    const { parent: parentPath, children: childrenPath } = oConfig;
 
     //TODO: Add watcher
-    watcher(path, generator);
+    // watcher(path, fnLinker);
     //TODO: Add transformation
     log(`${chalk.blue("singular path")}: ${path}`);
     log(`${chalk.blue("singular modules")}: ${modules}`);
   } else {
     Object.values(oConfig.environments).map(env => {
-      const { path, modules } = env;
+      // const { path, modules } = env;
+      const { parent: parentPath, children: childrenPath } = env;
       //TODO: Add watcher
       //TODO: Add transformation
       log(`${chalk.blue("plural path")}: ${path}`);

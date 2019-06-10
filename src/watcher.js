@@ -1,7 +1,7 @@
-require("dotenv").config();
-// import path from "path";
+const log = console.log;
 import chokidar from "chokidar";
 import chalk from "chalk";
+//TODO: Move linker callback to watcher
 
 // One-liner for current directory, ignores .dotfiles
 // let regexIgnore1 = new RegExp(/(^|[\/\\])\../);
@@ -17,10 +17,10 @@ import chalk from "chalk";
 // let watchPath = path.join(process.cwd(), dir);
 // let watchPath2 = __dirname;
 
-export function watcher(szChildDirectoryToWatch, fnGenerator) {
+export function watcher(szChildDirectoryToWatch, fnLinker) {
   chokidar.watch(szChildDirectoryToWatch).on("change", path => {
     console.log(chalk.yellow("path"), path);
-    fnGenerator();
+    fnLinker();
   });
 }
 
