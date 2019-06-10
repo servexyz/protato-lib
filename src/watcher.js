@@ -17,8 +17,8 @@ import chalk from "chalk";
 // let watchPath = path.join(process.cwd(), dir);
 // let watchPath2 = __dirname;
 
-export function watcher(szDirectoryToWatch, fnGenerator) {
-  chokidar.watch(szDirectoryToWatch).on("change", path => {
+export function watcher(szChildDirectoryToWatch, fnGenerator) {
+  chokidar.watch(szChildDirectoryToWatch).on("change", path => {
     console.log(chalk.yellow("path"), path);
     fnGenerator();
   });
