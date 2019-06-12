@@ -2,11 +2,8 @@ const log = console.log;
 import shell from "shelljs";
 import chalk from "chalk";
 //TODO: Check/throw err if npm not installed
-export async function linker(
-  szParentDirectory,
-  szChildDirectory,
-  szChildPackageName
-) {
+//TODO: Create linker factory to allow linking multiple children to one parent
+export async function linker(szParentPath, szChildPath, szChildPackageName) {
   const bLinkChildDirectoryFlag = false;
   try {
     shell.cd(szChildDirectory);
