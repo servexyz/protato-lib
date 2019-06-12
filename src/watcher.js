@@ -17,10 +17,33 @@ import chalk from "chalk";
 // let watchPath = path.join(process.cwd(), dir);
 // let watchPath2 = __dirname;
 
-export function watcher(szChildDirectoryToWatch, fnLinker) {
-  chokidar.watch(szChildDirectoryToWatch).on("change", path => {
+//TODO: Create chokidar factory to programmatically add new ".add" chain for each child module
+//TODO: Ignore any/all node_modules directories (parent & children)
+export function watcher(szParentPath, szChildPaths, fnLinker) {
+  log(`${chalk.green("szParentPath")}: ${szParentPath}`);
+  log(`${chalk.green("szChildPaths")}: ${szChildPaths}`);
+  var w;
+  if (Array.isArray(szChildPaths)) {
+    log(`szChildPaths is array`);
+    w = chokidar.watch(szChildPaths[0]);
+    for (let i = 1; i < szChildPaths.length; i++) {
+      w.add(szChildPaths[i]);
+    }
+  } else {
+    log(`szChildPaths is string`);
+    w = chokidar.watch(szChildPaths);
+  }
+  const w = chokidar.watch();
+  szChildPaths.forEach(cps => {
+    w.add(cps);
+  });
+  // chokidar.watch(szChildDirectoryToWatch).on("change", path => {
+  //   console.log(chalk.yellow("path"), path);
+  //   fnLinker();
+  // });
+  w.on("change", path => {
     console.log(chalk.yellow("path"), path);
-    fnLinker();
+    // fnLinker(szParentPath);
   });
 }
 
