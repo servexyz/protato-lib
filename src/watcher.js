@@ -53,12 +53,20 @@ function handleParentToChildren(hWatcher, szParentPath, szChildrenPaths) {
   });
 }
 function getChildPackageName(modifiedPackagePath, szChildrenPaths) {
+  var packageName;
   if (Array.isArray(szChildrenPaths)) {
-    //
+    szChildrenPaths.forEach(childPath => {
+      //TODO: Create utility function to abstract this unnecessary repetition
+      if (childPath.includes(modifiedPackagePath)) {
+        packageName = childPath;
+      }
+    });
   } else {
-    //
+    //TODO: Create utility function to abstract this unnecessary repetition
+    if (childPath.includes(modifiedPackagePath)) {
+      packageName = childPath;
+    }
   }
+  log(`packageName: ${packageName}`);
+  return packageName;
 }
-// console.log(`Hello ${process.env.SAMPLE_ENV}! from node-starter`);
-// console.log(`watchPath: ${watchPath}`);
-// console.log(`watchPath2: ${watchPath2}`);
