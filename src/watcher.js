@@ -40,11 +40,24 @@ export function watcher(szParentPath, szChildrenPaths, fnLinker) {
   //   fnLinker(szParentPath, sz);
   // });
 }
-function handleParentToChildren(hWatcher, szParentPath) {
+function handleParentToChildren(hWatcher, szParentPath, szChildrenPaths) {
   hWatcher.on("change", modifiedChildPath => {
     console.log(chalk.yellow("modifiedChildPath: "), modifiedChildPath);
-    fnLinker(w, szParentPath, modifiedChildPath);
+    //TODO: Substring modifiedChildPath from existing configPaths to pass into fnLinker
+    //* This is to ensure that npm linking happens in root scope.
+    let childPackageName = getChildPackageName(
+      modifiedChildPath,
+      szChildrenPaths
+    );
+    fnLinker(szParentPath, modifiedChildPath, childPackageName);
   });
+}
+function getChildPackageName(modifiedPackagePath, szChildrenPaths) {
+  if (Array.isArray(szChildrenPaths)) {
+    //
+  } else {
+    //
+  }
 }
 // console.log(`Hello ${process.env.SAMPLE_ENV}! from node-starter`);
 // console.log(`watchPath: ${watchPath}`);
