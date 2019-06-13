@@ -1,27 +1,24 @@
 const log = console.log;
 import chalk from "chalk";
-import watcher from "./watcher";
-import linker from "./linker";
+import { watcher } from "./watcher";
+import { linker } from "./linker";
 
+//
 export function parser(oConfig, fnLinker = linker) {
   if (isConfigSingular(oConfig)) {
-    const { parent: parentPath, child: childPaths } = oConfig;
-
-    //TODO: Add watcher
-    watcher(parentPath, childPaths, fnLinker);
+    const { parent: parentPath, children: childrenPaths } = oConfig;
+    watcher(parentPath, childrenPaths, fnLinker);
     log(`${chalk.blue("singular path")}: ${parentPath}`);
-    log(`${chalk.blue("singular modules")}: ${childPaths}`);
+    log(`${chalk.blue("singular modules")}: ${childrenPaths}`);
   } else {
     Object.values(oConfig.environments).map(env => {
-      // const { path, modules } = env;
-      const { parent: parentPath, child: childPaths } = env;
-      //TODO: Add watcher
-      //TODO: Add transformation
+      const { parent: parentPath, children: childrenPaths } = env;
       log(`${chalk.blue("plural path")}: ${parentPath}`);
-      log(`${chalk.blue("plural modules")}: ${childPaths}`);
+      log(`${chalk.blue("plural modules")}: ${childrenPaths}`);
     });
   }
 }
+
 function isConfigSingular(oConfig) {
   return !oConfig.hasOwnProperty("environments");
 }

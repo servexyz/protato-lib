@@ -25,8 +25,8 @@ const multipleA = {
 //TODO: Consider renaming "path" to "parent" and "modules" to "children"
 //? Why: Both "path" and "modules" list paths. Currently, one describes form and another, function
 const singleB = {
-  parent: "foo/bar",
-  children: ["path/to/module/one", "path/to/module/two"]
+  parent: "sandbox/node-starter",
+  children: "sandbox/npm-starter-sample-module"
 };
 const multipleB = {
   environments: [

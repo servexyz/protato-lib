@@ -2,11 +2,10 @@ const log = console.log;
 import shell from "shelljs";
 import chalk from "chalk";
 //TODO: Check/throw err if npm not installed
-//TODO: Create linker factory to allow linking multiple children to one parent
 export async function linker(szParentPath, szChildPath, szChildPackageName) {
   const bLinkChildDirectoryFlag = false;
   try {
-    shell.cd(szChildDirectory);
+    shell.cd(szChildPath);
     const linkChildDirectory = shell.exec("npm link", { async: true });
     await linkChildDirectory();
     bLinkChildDirectoryFlag = true;
@@ -17,7 +16,7 @@ export async function linker(szParentPath, szChildPath, szChildPackageName) {
   return new Promise(async (resolve, reject) => {
     if (bLinkChildDirectoryFlag === true) {
       try {
-        shell.cd(szParentDirectory);
+        shell.cd(szParentPath);
         const linkParentDirectory = shell.exec(
           `npm link ${szChildPackageName}`,
           {

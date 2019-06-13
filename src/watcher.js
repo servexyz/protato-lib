@@ -17,36 +17,35 @@ import chalk from "chalk";
 // let watchPath = path.join(process.cwd(), dir);
 // let watchPath2 = __dirname;
 
-//TODO: Create chokidar factory to programmatically add new ".add" chain for each child module
+//TODO: Create chokidar factory to programmatically add new ".add" chain for each children module
 //TODO: Ignore any/all node_modules directories (parent & children)
-export function watcher(szParentPath, szChildPaths, fnLinker) {
+export function watcher(szParentPath, szChildrenPaths, fnLinker) {
   log(`${chalk.green("szParentPath")}: ${szParentPath}`);
-  log(`${chalk.green("szChildPaths")}: ${szChildPaths}`);
+  log(`${chalk.green("szChildrenPaths")}: ${szChildrenPaths}`);
+
   var w;
-  if (Array.isArray(szChildPaths)) {
-    log(`szChildPaths is array`);
-    w = chokidar.watch(szChildPaths[0]);
-    for (let i = 1; i < szChildPaths.length; i++) {
-      w.add(szChildPaths[i]);
+  if (Array.isArray(szChildrenPaths)) {
+    log(`szChildrenPaths is array`);
+    w = chokidar.watch(szChildrenPaths[0]);
+    for (let i = 1; i < szChildrenPaths.length; i++) {
+      w.add(szChildrenPaths[i]);
     }
   } else {
-    log(`szChildPaths is string`);
-    w = chokidar.watch(szChildPaths);
+    log(`szChildrenPaths is string`);
+    w = chokidar.watch(szChildrenPaths);
   }
-  const w = chokidar.watch();
-  szChildPaths.forEach(cps => {
-    w.add(cps);
-  });
-  // chokidar.watch(szChildDirectoryToWatch).on("change", path => {
+  handleParentToChildren(w, szParentPath, szChildrenPaths);
+  // w.on("change", path => {
   //   console.log(chalk.yellow("path"), path);
-  //   fnLinker();
+  //   fnLinker(szParentPath, sz);
   // });
-  w.on("change", path => {
-    console.log(chalk.yellow("path"), path);
-    // fnLinker(szParentPath);
+}
+function handleParentToChildren(hWatcher, szParentPath) {
+  hWatcher.on("change", modifiedChildPath => {
+    console.log(chalk.yellow("modifiedChildPath: "), modifiedChildPath);
+    fnLinker(w, szParentPath, modifiedChildPath);
   });
 }
-
 // console.log(`Hello ${process.env.SAMPLE_ENV}! from node-starter`);
 // console.log(`watchPath: ${watchPath}`);
 // console.log(`watchPath2: ${watchPath2}`);

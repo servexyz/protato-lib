@@ -10,5 +10,5 @@ const log = console.log;
 log(`single`);
 parser(single, linker);
 
-log(`multiple`);
-parser(multiple, linker);
+// log(`multiple`);
+// parser(multiple, linker);
