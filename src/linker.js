@@ -1,13 +1,16 @@
 const log = console.log;
 import shell from "shelljs";
 import chalk from "chalk";
+import pkgDir from "pkg-dir";
+
 //TODO: Check/throw err if npm not installed
 export async function linker(szParentPath, szChildPath, szChildPackageName) {
-  const bLinkChildDirectoryFlag = false;
+  var bLinkChildDirectoryFlag = false;
   try {
-    shell.cd(szChildPath);
+    let childPkgDirPath = await pkgDir(szChildPath);
+    shell.cd(childPkgDirPath);
     const linkChildDirectory = shell.exec("npm link", { async: true });
-    await linkChildDirectory();
+    await linkChildDirectory;
     bLinkChildDirectoryFlag = true;
   } catch (err) {
     log(`${chalk.red("linkChildDirectory")}: ${err}`);
@@ -16,14 +19,15 @@ export async function linker(szParentPath, szChildPath, szChildPackageName) {
   return new Promise(async (resolve, reject) => {
     if (bLinkChildDirectoryFlag === true) {
       try {
-        shell.cd(szParentPath);
+        let parentPkgDirPath = await pkgDir(szParentPath);
+        shell.cd(parentPkgDirPath);
         const linkParentDirectory = shell.exec(
           `npm link ${szChildPackageName}`,
           {
             async: true
           }
         );
-        resolve(await linkParentDirectory());
+        resolve(linkParentDirectory);
       } catch (err) {
         log(`${chalk.red("linkChildDirectory")}: ${err}`);
         reject(err);
@@ -33,3 +37,5 @@ export async function linker(szParentPath, szChildPath, szChildPackageName) {
     }
   });
 }
+
+//TODO: Make sure chokidar ignores node_modules from watch otherwise it will emit all paths recursively
