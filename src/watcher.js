@@ -22,20 +22,29 @@ import pkgDir from "pkg-dir";
 //TODO: Read root dir from process.env
 //TODO: Add root dir error handling
 //TODO: Ignore any/all node_modules directories (parent & children)
+
+const chokidarOptions = {
+  cwd: process.env.configRootDir,
+  ignored: ["node_modules/**/*", ".git/**/*"],
+  ignoreInitial: true,
+  ignorePermissionErrors: true,
+  followSymlinks: true
+};
+
 export function watcher(szParentPath, szChildrenPaths, fnLinker) {
   log(`${chalk.green("szParentPath")}: ${szParentPath}`);
   log(`${chalk.green("szChildrenPaths")}: ${szChildrenPaths}`);
 
   var w;
   if (Array.isArray(szChildrenPaths)) {
-    log(`szChildrenPaths is array`);
-    w = chokidar.watch(szChildrenPaths[0]);
+    // log(`szChildrenPaths is array`);
+    w = chokidar.watch(szChildrenPaths[0], { ...chokidarOptions });
     for (let i = 1; i < szChildrenPaths.length; i++) {
       w.add(szChildrenPaths[i]);
     }
   } else {
-    log(`szChildrenPaths is string`);
-    w = chokidar.watch(szChildrenPaths);
+    // log(`szChildrenPaths is string`);
+    w = chokidar.watch(szChildrenPaths, { ...chokidarOptions });
   }
   log(`about to call ${chalk.blue("handleParentToChildren")}`);
   w.on("change", modifiedChildPath => {
