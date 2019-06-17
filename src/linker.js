@@ -5,10 +5,13 @@ import pkgDir from "pkg-dir";
 
 //TODO: Check/throw err if npm not installed
 //TODO: Resolve link target/src being same
+
 /*
- * npm ERR! Link target resolves to the same directory as link source: /usr/local/lib/node_modules/undefined
- * /usr/local/lib/node_modules/undefined/node_modules/undefined -> /usr/local/lib/node_modules/undefined
- */
+TODO: Check to see if package is already linked
+
+? EEXIST: file already exists, symlink '/Users/alechp/Code/servexyz/protato/.repositories/protato-lib/sandbox/.repositories/npm-starter-sample-module' -> '/usr/local/lib/node_modules/npm-starter-sample-module'
+? npm ERR! File exists: /Users/alechp/Code/servexyz/protato/.repositories/protato-lib/sandbox/.repositories/npm-starter-sample-module
+*/
 export async function linker(szParentPath, szChildPath, szChildPackageName) {
   var bLinkChildDirectoryFlag = false;
   try {
