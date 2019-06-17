@@ -9,12 +9,19 @@ TODO: Check to see if package is already linked
 ? EEXIST: file already exists, symlink '/Users/alechp/Code/servexyz/protato/.repositories/protato-lib/sandbox/.repositories/npm-starter-sample-module' -> '/usr/local/lib/node_modules/npm-starter-sample-module'
 ? npm ERR! File exists: /Users/alechp/Code/servexyz/protato/.repositories/protato-lib/sandbox/.repositories/npm-starter-sample-module
 */
-export function linker(szParentPath, szChildPath, szChildPackageName) {
+export async function linker(szParentPath, szChildPath, szChildPackageName) {
+  log(`${chalk.grey("szParentPath in linker")}: ${szParentPath}`);
+  log(`${chalk.grey("szChildPath in linker")}: ${szChildPath}`);
   var bLinkChildDirectoryFlag = false;
   try {
     let childPkgDirPath = await pkgDir(szChildPath);
     log(`childPkgDirPath: ${chalk.blue(childPkgDirPath)}`);
     shell.cd(childPkgDirPath);
+    log(
+      `shell changed directory to childPkgDirPath ${chalk.blue(
+        childPkgDirPath
+      )}`
+    );
     shell.exec("npm link", { async: true });
     bLinkChildDirectoryFlag = true;
   } catch (err) {
@@ -27,6 +34,12 @@ export function linker(szParentPath, szChildPath, szChildPackageName) {
         let parentPkgDirPath = await pkgDir(szParentPath);
         log(`parentPkgDirPath: ${chalk.blue(parentPkgDirPath)}`);
         shell.cd(parentPkgDirPath);
+        log(
+          `shell changed directory to parentPkgDirPath ${chalk.blue(
+            parentPkgDirPath
+          )}`
+        );
+
         const linkParentDirectoryStream = shell.exec(
           `npm link ${szChildPackageName}`,
           {
