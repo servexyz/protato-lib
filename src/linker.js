@@ -4,6 +4,11 @@ import chalk from "chalk";
 import pkgDir from "pkg-dir";
 
 //TODO: Check/throw err if npm not installed
+//TODO: Resolve link target/src being same
+/*
+ * npm ERR! Link target resolves to the same directory as link source: /usr/local/lib/node_modules/undefined
+ * /usr/local/lib/node_modules/undefined/node_modules/undefined -> /usr/local/lib/node_modules/undefined
+ */
 export async function linker(szParentPath, szChildPath, szChildPackageName) {
   var bLinkChildDirectoryFlag = false;
   try {

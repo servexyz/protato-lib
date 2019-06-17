@@ -1,7 +1,8 @@
 const log = console.log;
-import chokidar from "chokidar";
+import path from "path";
 import chalk from "chalk";
-import pkgJson from "package-json";
+
+import chokidar from "chokidar";
 import pkgDir from "pkg-dir";
 
 // One-liner for current directory, ignores .dotfiles
@@ -56,23 +57,41 @@ export function watcher(szParentPath, szChildrenPaths, fnLinker) {
 //TODO: Use pkgDir instead of funky lastIndexOf lookup
 //TODO: Use package-json to extract name metadata from package.json
 function getChildPackageName(modifiedPackagePath, szChildrenPaths) {
-  chalk.green("getChildPackageName called");
+  log(chalk.green("getChildPackageName called"));
   var packageName;
   if (Array.isArray(szChildrenPaths)) {
+    log(`yes, it's an array`);
     szChildrenPaths.forEach(childPath => {
       //TODO: Create utility function to abstract this unnecessary repetition
       if (childPath.includes(modifiedPackagePath)) {
         log(`childPath inside plural: ${chalk.red(childPath)}`);
-        packageName = childPath;
+        //TODO: Add handler for if pkgDir returns undefined
+        let packageRootDir = pkgDir(childPath);
+        let name = getPackageNameFromPackageJson(packageRootDir);
+        log(
+          `getChildPackageName<${chalk.blue("singular")}>: ${chalk.blue(name)}`
+        );
+        packageName += name;
       }
     });
   } else {
     //TODO: Create utility function to abstract this unnecessary repetition
     if (szChildrenPaths.includes(modifiedPackagePath)) {
       log(`childPath inside singular: ${chalk.red(szChildrenPaths)}`);
-      packageName = szChildrenPaths;
+      let packageRootDir = pkgDir(childPath);
+      let name = getPackageNameFromPackageJson(packageRootDir);
+      log(
+        `getChildPackageName<${chalk.blue("singular")}>: ${chalk.blue(name)}`
+      );
+      //TODO: Add handler for if pkgDir returns undefined
+      packageName = name;
     }
   }
-  log(`packageName: ${packageName}`);
+  log(`getChildPackageName: ${chalk.green(packageName)}`);
   return packageName;
+}
+function getPackageNameFromPackageJson(packageRootDir) {
+  const { name } = require(path.join(packageRootDir, "package.json"));
+  log(`getPackageName: ${chalk.green(name)}`);
+  return name;
 }
