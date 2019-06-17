@@ -76,12 +76,15 @@ function getChildPackageName(modifiedPackagePath, szChildrenPaths) {
       if (modifiedPackagePath.includes(childPath)) {
         log(`childPath inside plural: ${chalk.red(childPath)}`);
         //TODO: Add handler for if pkgDir returns undefined
-        let packageRootDir = pkgDir(modifiedPackagePath);
-        let name = getPackageNameFromPackageJson(packageRootDir);
-        log(
-          `getChildPackageName<${chalk.blue("singular")}>: ${chalk.blue(name)}`
-        );
-        packageName += name;
+        pkgDir(modifiedPackagePath).then(packageRootDir => {
+          let name = getPackageNameFromPackageJson(packageRootDir);
+          packageName += name;
+          log(
+            `getChildPackageName<${chalk.blue("singular")}>: ${chalk.blue(
+              name
+            )}`
+          );
+        });
       }
     });
   } else {
