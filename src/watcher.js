@@ -40,13 +40,16 @@ export function watcher(szParentPath, szChildrenPaths, fnLinker) {
     // log(`szChildrenPaths is array`);
     w = chokidar.watch(szChildrenPaths[0], { ...chokidarOptions });
     for (let i = 1; i < szChildrenPaths.length; i++) {
+      log(
+        `${chalk.grey("szChildrenPaths[i] to watch")}: ${szChildrenPaths[i]}`
+      );
       w.add(szChildrenPaths[i]);
     }
   } else {
     // log(`szChildrenPaths is string`);
     w = chokidar.watch(szChildrenPaths, { ...chokidarOptions });
   }
-  log(`about to call ${chalk.blue("handleParentToChildren")}`);
+  // log(`about to call ${chalk.blue("handleParentToChildren")}`);
   w.on("change", modifiedChildPath => {
     console.log(chalk.yellow("modifiedChildPath: "), modifiedChildPath);
     //TODO: Substring modifiedChildPath from existing configPaths to pass into fnLinker
@@ -74,7 +77,7 @@ function getChildPackageName(modifiedPackagePath, szChildrenPaths) {
     szChildrenPaths.forEach(childPath => {
       //TODO: Create utility function to abstract this unnecessary repetition
       if (modifiedPackagePath.includes(childPath)) {
-        log(`childPath inside plural: ${chalk.red(childPath)}`);
+        // log(`childPath inside plural: ${chalk.red(childPath)}`);
         //TODO: Add handler for if pkgDir returns undefined
         pkgDir(modifiedPackagePath).then(packageRootDir => {
           let name = getPackageNameFromPackageJson(packageRootDir);

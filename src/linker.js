@@ -31,6 +31,7 @@ export async function linker(szParentPath, szChildPath, szChildPackageName) {
   return new Promise(async (resolve, reject) => {
     if (bLinkChildDirectoryFlag === true) {
       try {
+        log(`${chalk.grey("szParentPath inside promise")}: ${szParentPath}`);
         let parentPkgDirPath = await pkgDir(szParentPath);
         log(`parentPkgDirPath: ${chalk.blue(parentPkgDirPath)}`);
         shell.cd(parentPkgDirPath);
