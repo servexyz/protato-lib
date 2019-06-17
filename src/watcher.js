@@ -19,6 +19,8 @@ import pkgDir from "pkg-dir";
 // let watchPath = path.join(process.cwd(), dir);
 // let watchPath2 = __dirname;
 
+//TODO: Read root dir from process.env
+//TODO: Add root dir error handling
 //TODO: Ignore any/all node_modules directories (parent & children)
 export function watcher(szParentPath, szChildrenPaths, fnLinker) {
   log(`${chalk.green("szParentPath")}: ${szParentPath}`);
@@ -54,7 +56,6 @@ export function watcher(szParentPath, szChildrenPaths, fnLinker) {
   });
 }
 
-//TODO: Use pkgDir instead of funky lastIndexOf lookup
 //TODO: Use package-json to extract name metadata from package.json
 function getChildPackageName(modifiedPackagePath, szChildrenPaths) {
   log(chalk.green("getChildPackageName called"));
@@ -63,10 +64,10 @@ function getChildPackageName(modifiedPackagePath, szChildrenPaths) {
     log(`yes, it's an array`);
     szChildrenPaths.forEach(childPath => {
       //TODO: Create utility function to abstract this unnecessary repetition
-      if (childPath.includes(modifiedPackagePath)) {
+      if (modifiedPackagePath.includes(childPath)) {
         log(`childPath inside plural: ${chalk.red(childPath)}`);
         //TODO: Add handler for if pkgDir returns undefined
-        let packageRootDir = pkgDir(childPath);
+        let packageRootDir = pkgDir(modifiedPackagePath);
         let name = getPackageNameFromPackageJson(packageRootDir);
         log(
           `getChildPackageName<${chalk.blue("singular")}>: ${chalk.blue(name)}`
@@ -76,22 +77,49 @@ function getChildPackageName(modifiedPackagePath, szChildrenPaths) {
     });
   } else {
     //TODO: Create utility function to abstract this unnecessary repetition
-    if (szChildrenPaths.includes(modifiedPackagePath)) {
-      log(`childPath inside singular: ${chalk.red(szChildrenPaths)}`);
-      let packageRootDir = pkgDir(childPath);
-      let name = getPackageNameFromPackageJson(packageRootDir);
+    log(`${chalk.yellow("szChildrenPaths")}: ${chalk.blue(szChildrenPaths)}`);
+    log(
+      `${chalk.yellow("modifiedPackagePath")}: ${chalk.blue(
+        modifiedPackagePath
+      )}`
+    );
+    let childPath = szChildrenPaths;
+    if (modifiedPackagePath.includes(childPath)) {
+      log(`childPath inside singular: ${chalk.red(childPath)}`);
+      let packageRootDir = process.env.configRootDir;
+      let packagePath = getPackagePathFromChildPath(childPath);
+      let packageFullPath = path.join(packageRootDir, packagePath);
+      log(`packageFullPath: ${JSON.stringify(packageFullPath, null, 2)}`);
+      let name = getPackageNameFromPackageJson(packageFullPath);
       log(
         `getChildPackageName<${chalk.blue("singular")}>: ${chalk.blue(name)}`
       );
       //TODO: Add handler for if pkgDir returns undefined
       packageName = name;
+    } else {
+      log(`childPath does NOT include modifiedPackagePath`);
     }
   }
   log(`getChildPackageName: ${chalk.green(packageName)}`);
   return packageName;
 }
-function getPackageNameFromPackageJson(packageRootDir) {
-  const { name } = require(path.join(packageRootDir, "package.json"));
+
+//TODO: Refactor to not include "From..."
+function getPackagePathFromChildPath(szChildPath) {
+  log(`szChildPath in getPackagePath: ${chalk.blue(szChildPath)}`);
+  return path.join(szChildPath, "package.json");
+}
+function getPackageNameFromPackageJson(szPackagePath) {
+  //TODO: What are the requirements for relative path here?
+  /*
+    szChildrenPaths: sandbox/npm-starter-sample-module
+    modifiedPackagePath: sandbox/npm-starter-sample-module/src/index.js
+
+    Since this is being returned, I need to figure out a better way to handle...
+    Just use __dirname of config file
+  */
+  log(`${chalk.green("getPackageNameFromPackageJson")} called`);
+  const { name } = require(szPackagePath);
   log(`getPackageName: ${chalk.green(name)}`);
   return name;
 }

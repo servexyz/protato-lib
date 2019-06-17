@@ -40,5 +40,11 @@ const multipleB = {
     }
   ]
 };
+const config = {
+  parent: "sandbox/node-starter",
+  children: "sandbox/npm-starter-sample-module"
+};
 
 export { singleB as single, multipleB as multiple };
+
+export { config };
