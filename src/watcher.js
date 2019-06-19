@@ -5,27 +5,9 @@ import chalk from "chalk";
 import chokidar from "chokidar";
 import pkgDir from "pkg-dir";
 
-// One-liner for current directory, ignores .dotfiles
-// let regexIgnore1 = new RegExp(/(^|[\/\\])\../);
-// let regexIgnore2 = new RegExp(/(^|[\/\\])|\b(node_modules)\../);
-// let regexIgnore3 = new RegExp(/(^|[\/\\]|\b[^node_modules]\b)\../);
-// let regexIgnore4 = new RegExp(/^(?!node_modules).*$/);
-
-// chokidar.watch(`${path.join(__dirname, )}`, { ignored: regexIgnore4 }).on("all", (event, path) => {
-//   console.log(event, path);
-// });
-
-// let dir = "src";
-// let watchPath = path.join(process.cwd(), dir);
-// let watchPath2 = __dirname;
-
-//TODO: Read root dir from process.env
-//TODO: Add root dir error handling
-//TODO: Ignore any/all node_modules directories (parent & children)
-
 const chokidarOptions = {
   cwd: process.env.configRootDir,
-  ignored: ["node_modules/**/*", ".git/**/*"],
+  ignored: ["**/node_modules/**/*", "**/.git/**/*"],
   ignoreInitial: true,
   ignorePermissionErrors: true,
   followSymlinks: true
@@ -60,11 +42,6 @@ export function watcher(szParentPath, szChildrenPaths, fnLinker) {
     );
     log(`childPackageName: ${chalk.blue(childPackageName)}`);
     fnLinker(szParentPath, modifiedChildPath, childPackageName);
-
-    // w.on("change", path => {
-    //   console.log(chalk.yellow("path"), path);
-    //   fnLinker(szParentPath, sz);
-    // });
   });
 }
 
