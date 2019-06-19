@@ -1,6 +1,8 @@
-import { parser } from "./parser";
+import { PTOParser } from "./parser";
 import config from "../.protato";
 
 function init(oConfig = config) {
-  parser(oConfig);
+  let parser = new PTOParser(oConfig);
 }
+
+init();
