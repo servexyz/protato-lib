@@ -31,37 +31,35 @@ const log = console.log;
 import path from "path";
 import chalk from "chalk";
 import fs from "fs-extra";
-import { printLine, printMirror } from "./utilities";
+import { printLine, printMirror, printMarquee } from "./utilities";
 
 function PTOParser(config) {
   const { parent, children } = config;
-  log(
-    `${chalk.yellow(
-      "-----------------------------------------------------------"
-    )} `
-  );
+  printLine("yellow");
   log(
     `${chalk.yellow("parent")} and ${chalk.yellow(
       "children"
     )} objects were both found`
   );
   log(
-    `${chalk.yellow(
-      "-----------------------------------------------------------"
-    )} `
+    `${chalk.yellow("parent")}: ${chalk.grey(JSON.stringify(parent, null, 2))}`
   );
-  log(`${chalk.yellow("parent")}: ${JSON.stringify(parent, null, 2)}`);
-  log(`${chalk.yellow("children")}: ${JSON.stringify(children, null, 2)}`);
+  log(
+    `${chalk.yellow("children")}: ${chalk.grey(
+      JSON.stringify(children, null, 2)
+    )}`
+  );
+  printLine("yellow");
   this.watcher = { targets: undefined, options: undefined };
   this.config = config;
-  this.parent = config.parent;
-  this.children = config.children;
+  this.config.parent = config.parent;
+  this.config.children = config.children;
   return this;
   // this.getWatcherTargets(config.children);
 }
 
 PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
-  children = this.children
+  children = this.config.children
 ) {
   let targets = children.map(oChild => {
     let { dir, src } = oChild;
@@ -71,17 +69,15 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
       try {
         await fs.ensureDir(childDirPath);
         await fs.ensureFile(childPackagePath);
-
-        printLine("blue", 59, "-");
+        printLine("blue");
         log(
           `${chalk.blue("childDirPath")} and ${chalk.blue(
             "childPackagePath"
           )} were both found`
         );
-        printMirror({ childDirPath }, "yellow", "grey");
-        log(
-          `${chalk.blue("childPackagePath")}: ${chalk.grey(childPackagePath)}`
-        );
+        printMirror({ childDirPath }, "blue", "grey");
+        printMirror({ childPackagePath }, "blue", "grey");
+        printLine("blue");
       } catch (err) {
         throw new Error(
           `${chalk.red(
@@ -94,37 +90,18 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
   });
   this.watcher.targets = targets;
   if (this.watcher.targets !== undefined) {
-    log(
-      `${chalk.yellow(
-        "-----------------------------------------------------------"
-      )}`
-    );
-    log(`${chalk.yellow("watcher targets")} are defined `);
-    log(
-      `${chalk.yellow(
-        "-----------------------------------------------------------"
-      )}`
-    );
-    log(`${chalk.yellow("this.watcher.targets")}: ${this.watcher.targets}`);
+    printLine("yellow");
+    log(`${chalk.yellow("watcher targets")} are defined \n`);
+    printMirror({ targets }, "yellow", "grey");
+    printLine("yellow", null, null, 2);
   } else {
-    log(
-      `${chalk.red(
-        "-----------------------------------------------------------"
-      )}`
-    );
-    log(
-      `${chalk.yellow("this.watcher.targets")}: ${chalk.red(
-        this.watcher.targets
-      )}`
-    );
-    log(
-      `${chalk.red(
-        "-----------------------------------------------------------"
-      )}`
-    );
+    printLine("red");
+    printMirror({ targets }, "red", "white");
+    printLine("red");
   }
   return this;
 };
+
 PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
   /*
   TODO: derive children's node_module directories via this.watcher.targets
@@ -144,13 +121,55 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
     } 
   }
 */
-  let options = {};
+  let childrenDirectoriesToIgnore = [];
+
+  function getChildNodeModulesPath(szChildTargetPath) {
+    let potentialPath = path.join(szChildTargetPath, "node_modules", "**", "*");
+    (async () => {
+      try {
+        await fs.ensureDir(potentialPath);
+        printLine("green");
+        printMirror({ childrenDirectoriesToIgnore }, "green", "grey");
+        printLine("green");
+      } catch (err) {
+        throw new Error(`${chalk.red("getChildNodeModulesPath")}: ${err}`);
+      }
+    })();
+    return potentialPath;
+  }
+
+  this.config.children.map(child => {
+    const { dir } = child;
+    childrenDirectoriesToIgnore.push(getChildNodeModulesPath(dir));
+  });
+
+  this.watcher.options = {
+    cwd: process.env.configRootDir,
+    ignored: ["node_modules/**/*", ...childrenDirectoriesToIgnore],
+    ignoreInitial: true,
+    ignorePermissionErrors: true,
+    followSymlinks: true
+  };
+
   return this;
 };
 
 function getWatcherConfig(oConfig) {
   let parser = new PTOParser(oConfig);
   parser.getWatcherTargets().getWatcherOptions();
+
+  const {
+    watcher: { targets, options }
+  } = parser;
+
+  printLine("yellow");
+  printMirror({ targets }, "yellow", "grey");
+  log(
+    `${chalk.yellow("options")}: ${chalk.grey(
+      JSON.stringify(options, null, 2)
+    )}`
+  );
+  printLine("yellow");
 }
 
 export { PTOParser, getWatcherConfig };
