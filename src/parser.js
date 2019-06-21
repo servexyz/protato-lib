@@ -71,21 +71,14 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
       try {
         await fs.ensureDir(childDirPath);
         await fs.ensureFile(childPackagePath);
-        log(
-          `${chalk.blue(
-            "-----------------------------------------------------------"
-          )} `
-        );
+
+        printLine("blue");
         log(
           `${chalk.blue("childDirPath")} and ${chalk.blue(
             "childPackagePath"
           )} were both found`
         );
-        log(
-          `${chalk.blue(
-            "-----------------------------------------------------------"
-          )} `
-        );
+        printLine("blue");
         log(`${chalk.blue("childDirPath")}: ${chalk.grey(childDirPath)}`);
         log(
           `${chalk.blue("childPackagePath")}: ${chalk.grey(childPackagePath)}`
@@ -107,12 +100,12 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
         "-----------------------------------------------------------"
       )}`
     );
+    log(`${chalk.yellow("watcher targets")} are defined `);
     log(
       `${chalk.yellow(
         "-----------------------------------------------------------"
-      )}${chalk.yellow("watcher targets")} are defined `
+      )}`
     );
-    log(` `);
     log(`${chalk.yellow("this.watcher.targets")}: ${this.watcher.targets}`);
   } else {
     log(
@@ -157,7 +150,6 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
 };
 
 function getWatcherConfig(oConfig) {
-  printLine("blue");
   let parser = new PTOParser(oConfig);
   parser.getWatcherTargets().getWatcherOptions();
 }

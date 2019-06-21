@@ -1,25 +1,43 @@
 import chalk from "chalk";
+const log = console.log;
+
+/*
+TODO: Create function to "reflect" value 
+TODO: Param: color
+TODO: Param: text 
+*/
+
+/*
+const myFirstName = 'John'
+Object.keys({myFirstName})[0]
+
+returns "myFirstName"
+*/
 
 export function printLine(szColor) {
+  //TODO: Add param with size of line
+  //TODO: Add param with character used (- = * _ #)
   let line = "---------------------------------------------";
   let fn = undefined;
   switch (szColor) {
     case "red":
       fn = chalk.red;
-      return;
+      break;
     case "orange":
       fn = chalk.orange;
-      return;
+      break;
     case "yellow":
       fn = chalk.yellow;
-      return;
+      break;
     case "green":
       fn = chalk.green;
-      return;
+      break;
     case "blue":
       fn = chalk.blue;
-      return;
+      break;
+    default:
+      fn = chalk.white;
+      break;
   }
-  log(`going to print line:`);
   log(fn(line));
 }
