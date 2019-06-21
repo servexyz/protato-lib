@@ -31,7 +31,7 @@ const log = console.log;
 import path from "path";
 import chalk from "chalk";
 import fs from "fs-extra";
-import { printLine } from "./utilities";
+import { printLine, printMirror } from "./utilities";
 
 function PTOParser(config) {
   const { parent, children } = config;
@@ -72,22 +72,21 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
         await fs.ensureDir(childDirPath);
         await fs.ensureFile(childPackagePath);
 
-        printLine("blue");
+        printLine("blue", 59, "-");
         log(
           `${chalk.blue("childDirPath")} and ${chalk.blue(
             "childPackagePath"
           )} were both found`
         );
-        printLine("blue");
-        log(`${chalk.blue("childDirPath")}: ${chalk.grey(childDirPath)}`);
+        printMirror({ childDirPath }, "yellow", "grey");
         log(
           `${chalk.blue("childPackagePath")}: ${chalk.grey(childPackagePath)}`
         );
       } catch (err) {
         throw new Error(
-          `${chalk.red("childDirPath")} or ${chalk.red(
-            "childPackagePath"
-          )} were not found. \n ${chalk.grey(err)}`
+          `${chalk.red(
+            "getWatcherTargets :: childDirPath & childPackagePath existence check"
+          )} \n ${chalk.grey(err)}`
         );
       }
     })();
