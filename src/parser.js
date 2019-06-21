@@ -5,32 +5,33 @@
   2a. Do this via: getWatcherConfig
   2ai. Do this via: [getWatchTargets, getWatchOptions]
 
-  * Sample Output
-  {
-    watch: [
+* Sample Output 
+  const watcherConfig = {
+    targets: [
       {
         dir: "sandbox/npm-starter-sample-module/src",
         name: "npm-starter-sample-module"
-      },
-      options: {
-        cwd: process.env.configRootDir,
-        ignored: [
-                  "node_modules", 
-                  "sandbox/npm-starter-sample-module/node_modules", 
-                  "sandbox/npm-starter-sample-module/.git"
-                ],
-        ignoreInitial: true,
-        ignorePermissionErrors: true,
-        followSymlinks: true
       }
-    ]
-  }
+    ],
+    options: {
+      cwd: process.env.configRootDir,
+      ignored: [
+        "node_modules",
+        "sandbox/npm-starter-sample-module/node_modules",
+        "sandbox/npm-starter-sample-module/.git"
+      ],
+      ignoreInitial: true,
+      ignorePermissionErrors: true,
+      followSymlinks: true
+    }
+  };
 */
 
 const log = console.log;
 import path from "path";
 import chalk from "chalk";
 import fs from "fs-extra";
+import { printLine } from "./utilities";
 
 function PTOParser(config) {
   const { parent, children } = config;
@@ -51,14 +52,18 @@ function PTOParser(config) {
   );
   log(`${chalk.yellow("parent")}: ${JSON.stringify(parent, null, 2)}`);
   log(`${chalk.yellow("children")}: ${JSON.stringify(children, null, 2)}`);
-  // this.parent = config.parent;
-  // this.children = config.children;
-  this.getWatcherTargets(config.children);
+  this.watcher = { targets: undefined, options: undefined };
+  this.config = config;
+  this.parent = config.parent;
+  this.children = config.children;
+  return this;
+  // this.getWatcherTargets(config.children);
 }
 
-PTOParser.prototype.getWatcherTargets = function getWatcherTargets(children) {
-  //? Do I need to worry about cwd here?
-  return children.map(oChild => {
+PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
+  children = this.children
+) {
+  let targets = children.map(oChild => {
     let { dir, src } = oChild;
     let childDirPath = path.join(dir, src);
     let childPackagePath = path.join(childDirPath, "package.json");
@@ -93,12 +98,68 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(children) {
         );
       }
     })();
+    return childDirPath;
   });
+  this.watcher.targets = targets;
+  if (this.watcher.targets !== undefined) {
+    log(
+      `${chalk.yellow(
+        "-----------------------------------------------------------"
+      )}`
+    );
+    log(
+      `${chalk.yellow(
+        "-----------------------------------------------------------"
+      )}${chalk.yellow("watcher targets")} are defined `
+    );
+    log(` `);
+    log(`${chalk.yellow("this.watcher.targets")}: ${this.watcher.targets}`);
+  } else {
+    log(
+      `${chalk.red(
+        "-----------------------------------------------------------"
+      )}`
+    );
+    log(
+      `${chalk.yellow("this.watcher.targets")}: ${chalk.red(
+        this.watcher.targets
+      )}`
+    );
+    log(
+      `${chalk.red(
+        "-----------------------------------------------------------"
+      )}`
+    );
+  }
+  return this;
 };
-PTOParser.prototype.getWatcherOptions = function getWatcherOptions(
-  childrenIgnoredDirectories
-) {
-  log(`placeholder`);
+PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
+  /*
+  TODO: derive children's node_module directories via this.watcher.targets
+  TODO: set this.watcher.options = {}
+  {
+    options: {
+        cwd: process.env.configRootDir,
+        ignored: [
+          "node_modules",
+          "sandbox/npm-starter-sample-module/node_modules",
+          "sandbox/npm-starter-sample-module/.git"
+        ],
+        ignoreInitial: true,
+        ignorePermissionErrors: true,
+        followSymlinks: true
+      }
+    } 
+  }
+*/
+  let options = {};
+  return this;
 };
 
-export { PTOParser };
+function getWatcherConfig(oConfig) {
+  printLine("blue");
+  let parser = new PTOParser(oConfig);
+  parser.getWatcherTargets().getWatcherOptions();
+}
+
+export { PTOParser, getWatcherConfig };
