@@ -32,6 +32,8 @@
     "chalk": "^2.4.2",
     "chokidar": "^3.0.1",
     "dotenv": "^6.1.0",
+    "fs-extra": "^8.0.1",
+    "is-empty": "^1.2.0",
     "pkg-dir": "^4.2.0",
     "shelljs": "^0.8.3"
   },
@@ -39,6 +41,7 @@
     "start": "npm run dev",
     "clean": "rm -Rf ./build",
     "dev": "npm run dev:liveReloadedModule",
+    "debug": "babel-node debug src/index.js",
     "dev:vanillaModule": "babel-node src/index.js",
     "dev:liveReloadedModule": "nodemon --watch src/ --exec 'babel-node src/index.js'",
     "dev:liveReloadedDocker": "npm-run-all -p docker:compose dev:liveReloadedModule docker:liveReload ",
