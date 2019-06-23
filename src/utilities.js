@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import isEmpty from "is-empty";
+import fs from "fs-extra";
 const log = console.log;
 
 export function getChalkColor(szColor) {
@@ -148,3 +149,69 @@ export function printLine(colorOrOptions) {
     log(lineColor(line));
   }
 }
+
+export async function pathsExist(arrPathsObj, szPreErrorMessage) {
+  //TODO: Consider adding option to include printLine & printMirrors for success cases
+  //TODO: Convert below into unit test (should pass)
+  // let rightPath = [
+  //   {
+  //     dir: "sandbox/npm-starter-sample-module/src",
+  //     name: "npm-starter-sample-module"
+  //   }
+  // ];
+  // pathsExist(targets, "PTOWatcher failed to initialize properly <fs.access>");
+  //TODO: Convert below code into unit test (ie. should throw error)
+  // let wrongPath = [
+  //   {
+  //     foo: "bar"
+  //   }
+  // ];
+  // pathsExist(wrongPath, "PTOWatcher failed to initialize properly <fs.access>");
+
+  try {
+    if (Array.isArray(arrPathsObj)) {
+      let arrFilePaths = arrPathsObj.flatMap(oTarget => {
+        log(`oTarget: ${JSON.stringify(oTarget, null, 2)}`);
+        return Object.values(oTarget).map(pathToCheck => {
+          printMirror({ pathToCheck }, "magenta", "grey");
+          return pathToCheck;
+        });
+      });
+      for (let pathToCheck of arrFilePaths) {
+        await fs.access(pathToCheck);
+      }
+    } else if (typeof pathToCheck == "string") {
+      await fs.access(pathToCheck);
+    }
+  } catch (err) {
+    let message = `
+      ${chalk.red(szPreErrorMessage)}\n 
+      Official error: ${chalk.grey(err)}
+    `;
+    throw new Error(message);
+  }
+}
+
+/* 
+? pathsExist motivation:
+? I kept creating functions like this:
+
+(async () => {
+    Object.values(targets).map(async ({ childDirPath, childPackagePath }) => {
+      printMirror({ childDirPath }, "magenta", "grey");
+      printMirror({ childPackagePath }, "magenta", "grey");
+      try {
+        await fs.access(childDirPath);
+        await fs.access(childPackagePath);
+      } catch (err) {
+        log(
+          `
+        ${chalk.red("PTOWatcher failed to initialize properly <fs.access> \n")} 
+        Official error: ${chalk.grey(err)}
+        `
+        );
+      }
+    });
+  })();
+
+*/

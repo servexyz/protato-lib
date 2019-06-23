@@ -12,7 +12,7 @@ const log = console.log;
 import path from "path";
 import chalk from "chalk";
 import fs from "fs-extra";
-import { printLine, printMirror, printMarquee } from "./utilities";
+import { printLine, printMirror, pathsExist } from "./utilities";
 
 function PTOParser(config) {
   const { parent, children } = config;
@@ -40,27 +40,35 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
     let { dir, src } = oChild;
     let childDirPath = path.join(dir, src);
     let childPackagePath = path.join(dir, "package.json");
-    (async () => {
-      try {
-        await fs.access(childDirPath);
-        await fs.access(childPackagePath);
-        printLine("blue");
-        log(
-          `${chalk.blue("childDirPath")} and ${chalk.blue(
-            "childPackagePath"
-          )} were both found`
-        );
-        printMirror({ childDirPath }, "blue", "grey");
-        printMirror({ childPackagePath }, "blue", "grey");
-        printLine("blue");
-      } catch (err) {
-        throw new Error(
-          `${chalk.red(
-            "getWatcherTargets :: childDirPath & childPackagePath existence check"
-          )} \n ${chalk.grey(err)}`
-        );
-      }
-    })();
+    // let childDirPath = "failll";
+    // let childPackagePath = "failll";
+
+    let pathsToCheck = [{ childDirPath, childPackagePath }];
+    pathsExist(
+      pathsToCheck,
+      "getWatcherTargets' directory and package path existence check"
+    );
+    // (async () => {
+    //   try {
+    //     await fs.access(childDirPath);
+    //     await fs.access(childPackagePath);
+    //     printLine("blue");
+    //     log(
+    //       `${chalk.blue("childDirPath")} and ${chalk.blue(
+    //         "childPackagePath"
+    //       )} were both found`
+    //     );
+    //     printMirror({ childDirPath }, "blue", "grey");
+    //     printMirror({ childPackagePath }, "blue", "grey");
+    //     printLine("blue");
+    //   } catch (err) {
+    //     throw new Error(
+    //       `${chalk.red(
+    //         "getWatcherTargets :: childDirPath & childPackagePath existence check"
+    //       )} \n ${chalk.grey(err)}`
+    //     );
+    //   }
+    // })();
     return { childDirPath, childPackagePath };
   });
   this.watcher.targets = targets;
@@ -77,6 +85,7 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
   return this;
 };
 
+//TODO: Replace file checks with utility function
 PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
   let childrenDirectoriesToIgnore = [];
 

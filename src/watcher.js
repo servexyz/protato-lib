@@ -7,8 +7,7 @@
 const log = console.log;
 import fs from "fs-extra";
 import chalk from "chalk";
-import { printMirror } from "./utilities";
-import { fstat } from "fs";
+import { printMirror, pathsExist } from "./utilities";
 
 const sampleConfig = {
   targets: [
@@ -30,25 +29,9 @@ const sampleConfig = {
   }
 };
 
+//TODO: Replace file checks with utility function
 function PTOWatcher(oWatcherConfig) {
   const { targets, options } = oWatcherConfig;
-  (async () => {
-    Object.values(targets).map(async ({ childDirPath, childPackagePath }) => {
-      printMirror({ childDirPath }, "magenta", "grey");
-      printMirror({ childPackagePath }, "magenta", "grey");
-      try {
-        await fs.access(childDirPath);
-        await fs.access(childPackagePath);
-      } catch (err) {
-        log(
-          `
-        ${chalk.red("PTOWatcher failed to initialize properly <fs.access> \n")} 
-        Official error: ${chalk.grey(err)}
-        `
-        );
-      }
-    });
-  })();
 }
 
 function getLinkerConfig() {
