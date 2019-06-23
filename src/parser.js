@@ -39,7 +39,7 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
   let targets = children.map(oChild => {
     let { dir, src } = oChild;
     let childDirPath = path.join(dir, src);
-    let childPackagePath = path.join(childDirPath, "package.json");
+    let childPackagePath = path.join(dir, "package.json");
     (async () => {
       try {
         await fs.ensureDir(childDirPath);
@@ -61,7 +61,7 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
         );
       }
     })();
-    return childDirPath;
+    return { childDirPath, childPackagePath };
   });
   this.watcher.targets = targets;
   if (this.watcher.targets !== undefined) {
@@ -78,24 +78,6 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
 };
 
 PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
-  /*
-  TODO: derive children's node_module directories via this.watcher.targets
-  TODO: set this.watcher.options = {}
-  {
-    options: {
-        cwd: process.env.configRootDir,
-        ignored: [
-          "node_modules",
-          "sandbox/npm-starter-sample-module/node_modules",
-          "sandbox/npm-starter-sample-module/.git"
-        ],
-        ignoreInitial: true,
-        ignorePermissionErrors: true,
-        followSymlinks: true
-      }
-    } 
-  }
-*/
   let childrenDirectoriesToIgnore = [];
 
   function getChildNodeModulesPath(szChildTargetPath) {
