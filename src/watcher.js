@@ -32,6 +32,7 @@ const sampleConfig = {
 //TODO: Replace file checks with utility function
 function PTOWatcher(oWatcherConfig) {
   const { targets, options } = oWatcherConfig;
+  pathsExist(targets);
 }
 
 function getLinkerConfig() {

@@ -40,10 +40,8 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
     let { dir, src } = oChild;
     let childDirPath = path.join(dir, src);
     let childPackagePath = path.join(dir, "package.json");
-    // let childDirPath = "failll";
-    // let childPackagePath = "failll";
 
-    let pathsToCheck = [{ childDirPath, childPackagePath }];
+    let pathsToCheck = [childDirPath, childPackagePath];
     pathsExist(
       pathsToCheck,
       "getWatcherTargets' directory and package path existence check"

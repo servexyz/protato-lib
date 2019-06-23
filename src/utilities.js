@@ -170,17 +170,27 @@ export async function pathsExist(arrPathsObj, szPreErrorMessage) {
 
   try {
     if (Array.isArray(arrPathsObj)) {
-      let arrFilePaths = arrPathsObj.flatMap(oTarget => {
-        log(`oTarget: ${JSON.stringify(oTarget, null, 2)}`);
-        return Object.values(oTarget).map(pathToCheck => {
-          printMirror({ pathToCheck }, "magenta", "grey");
-          return pathToCheck;
-        });
+      let arrFilePaths = arrPathsObj.flatMap(mTarget => {
+        if (typeof mTarget == "object") {
+          // * handle array of objects
+          // * (ie. default case; used for testing watcherConfig's "targets" array)
+
+          return Object.values(mTarget).map(pathToCheck => {
+            return pathToCheck;
+          });
+        } else {
+          // * handle array of strings
+          // * (ie. manually defined arrays with file paths)
+
+          return mTarget;
+        }
       });
       for (let pathToCheck of arrFilePaths) {
+        // ? Now iterate over the flattened map of paths (all should be strings)
         await fs.access(pathToCheck);
       }
     } else if (typeof pathToCheck == "string") {
+      // ? handle checking path of single string
       await fs.access(pathToCheck);
     }
   } catch (err) {
