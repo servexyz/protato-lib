@@ -7,7 +7,7 @@
 const log = console.log;
 import fs from "fs-extra";
 import chalk from "chalk";
-import { printMirror, pathsExist } from "./utilities";
+import { printMirror, pathsExistOrThrow } from "./utilities";
 
 const sampleConfig = {
   targets: [
@@ -32,7 +32,7 @@ const sampleConfig = {
 //TODO: Replace file checks with utility function
 function PTOWatcher(oWatcherConfig) {
   const { targets, options } = oWatcherConfig;
-  pathsExist(targets);
+  pathsExistOrThrow(targets);
 }
 
 function getLinkerConfig() {

@@ -150,7 +150,8 @@ export function printLine(colorOrOptions) {
   }
 }
 
-export async function pathsExist(arrPathsObj, szPreErrorMessage) {
+export async function pathsExistOrThrow(arrPathsObj, szPreErrorMessage) {
+  //TODO: Consider adding a return value (or prom) so it can be caught inline
   //TODO: Consider adding option to include printLine & printMirrors for success cases
   //TODO: Convert below into unit test (should pass)
   // let rightPath = [
@@ -159,14 +160,14 @@ export async function pathsExist(arrPathsObj, szPreErrorMessage) {
   //     name: "npm-starter-sample-module"
   //   }
   // ];
-  // pathsExist(targets, "PTOWatcher failed to initialize properly <fs.access>");
+  // pathsExistOrThrow(targets, "PTOWatcher failed to initialize properly <fs.access>");
   //TODO: Convert below code into unit test (ie. should throw error)
   // let wrongPath = [
   //   {
   //     foo: "bar"
   //   }
   // ];
-  // pathsExist(wrongPath, "PTOWatcher failed to initialize properly <fs.access>");
+  // pathsExistOrThrow(wrongPath, "PTOWatcher failed to initialize properly <fs.access>");
 
   try {
     if (Array.isArray(arrPathsObj)) {
@@ -203,7 +204,7 @@ export async function pathsExist(arrPathsObj, szPreErrorMessage) {
 }
 
 /* 
-? pathsExist motivation:
+? pathsExistOrThrow motivation:
 ? I kept creating functions like this:
 
 (async () => {

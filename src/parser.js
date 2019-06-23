@@ -12,7 +12,7 @@ const log = console.log;
 import path from "path";
 import chalk from "chalk";
 import fs from "fs-extra";
-import { printLine, printMirror, pathsExist } from "./utilities";
+import { printLine, printMirror, pathsExistOrThrow } from "./utilities";
 
 function PTOParser(config) {
   const { parent, children } = config;
@@ -42,7 +42,7 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
     let childPackagePath = path.join(dir, "package.json");
 
     let pathsToCheck = [childDirPath, childPackagePath];
-    pathsExist(
+    pathsExistOrThrow(
       pathsToCheck,
       "getWatcherTargets' directory and package path existence check"
     );
