@@ -162,12 +162,14 @@ export async function pathsExistOrThrow(arrPathsObj, szPreErrorMessage) {
   // ];
   // pathsExistOrThrow(targets, "PTOWatcher failed to initialize properly <fs.access>");
   //TODO: Convert below code into unit test (ie. should throw error)
-  // let wrongPath = [
+  // let wrongPathString = "foo"
+  // let wrongPathArray = [
   //   {
   //     foo: "bar"
   //   }
   // ];
-  // pathsExistOrThrow(wrongPath, "PTOWatcher failed to initialize properly <fs.access>");
+  // pathsExistOrThrow(wrongPathArray, "PTOWatcher failed to initialize properly <fs.access>");
+  // pathsExistOrThrow(wrongPathString, "PTOWatcher failed to initialize properly <fs.access>");
 
   try {
     if (Array.isArray(arrPathsObj)) {
@@ -190,9 +192,10 @@ export async function pathsExistOrThrow(arrPathsObj, szPreErrorMessage) {
         // ? Now iterate over the flattened map of paths (all should be strings)
         await fs.access(pathToCheck);
       }
-    } else if (typeof pathToCheck == "string") {
+    } else if (typeof arrPathsObj == "string") {
       // ? handle checking path of single string
-      await fs.access(pathToCheck);
+      log(`arrPathsObj is: ${arrPathsObj}`);
+      await fs.access(arrPathsObj);
     }
   } catch (err) {
     let message = `
