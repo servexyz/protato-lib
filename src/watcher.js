@@ -1,8 +1,14 @@
 /*
   * Objective
   1. Grab watcher targets & watcher config 
+  2. Create chokidar watcher factory of all targets' directories
+  2a. Pass watcherConfig.options to chokidar's watcher's options
 */
+const log = console.log;
+import fs from "fs-extra";
 import chalk from "chalk";
+import { printMirror } from "./utilities";
+import { fstat } from "fs";
 
 const sampleConfig = {
   targets: [
@@ -26,21 +32,30 @@ const sampleConfig = {
 
 function PTOWatcher(oWatcherConfig) {
   const { targets, options } = oWatcherConfig;
-  let packageDir
   (async () => {
-    try {
-      let 
-    } catch (err) {
-      log(
+    Object.values(targets).map(async ({ childDirPath, childPackagePath }) => {
+      printMirror({ childDirPath }, "magenta", "grey");
+      printMirror({ childPackagePath }, "magenta", "grey");
+      try {
+        await fs.access(childDirPath);
+        await fs.access(childPackagePath);
+      } catch (err) {
+        log(
+          `
+        ${chalk.red("PTOWatcher failed to initialize properly <fs.access> \n")} 
+        Official error: ${chalk.grey(err)}
         `
-        ${chalk.red("PTOWatcher failed to initialize properly. \n")} 
-        ${chalk.grey(`Official error: ${err}`)}
-        `
-      );
-    }
+        );
+      }
+    });
   })();
 }
 
-PTOWatcher.prototype.getLinkerConfig = function getLinkerConfig() {};
+function getLinkerConfig() {
+  log(`k`);
+  return;
+}
 
-export { PTOWatcher, sampleConfig, initWatcher, getLinkerConfig };
+export { PTOWatcher, getLinkerConfig, sampleConfig };
+
+// initWatcher as separate function ?

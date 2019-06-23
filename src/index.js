@@ -1,7 +1,13 @@
 import { getWatcherConfig } from "./parser";
+import { getLinkerConfig, PTOWatcher } from "./watcher";
 import { printMirror } from "./utilities";
-import config from "../.protato";
+import userConfig from "../.protato";
 
-let obj = getWatcherConfig(config);
+let oWC = getWatcherConfig(userConfig);
 
-printMirror({ obj }, "green", "white");
+printMirror({ oWC }, "green", "white");
+
+PTOWatcher(oWC);
+// let oLC = getLinkerConfig(oWC);
+
+// printMirror({ oLC }, "blue", "white");

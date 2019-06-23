@@ -42,8 +42,8 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
     let childPackagePath = path.join(dir, "package.json");
     (async () => {
       try {
-        await fs.ensureDir(childDirPath);
-        await fs.ensureFile(childPackagePath);
+        await fs.access(childDirPath);
+        await fs.access(childPackagePath);
         printLine("blue");
         log(
           `${chalk.blue("childDirPath")} and ${chalk.blue(
@@ -84,7 +84,7 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
     let potentialPath = path.join(szChildTargetPath, "node_modules", "**", "*");
     (async () => {
       try {
-        await fs.ensureDir(potentialPath);
+        await fs.access(potentialPath);
         printLine("green");
         printMirror({ childrenDirectoriesToIgnore }, "green", "grey");
         printLine("green");
@@ -136,25 +136,25 @@ function getWatcherConfig(oConfig) {
 
 export { PTOParser, getWatcherConfig };
 
-/*
-  * getWatcherConfig Sample Output 
-  const watcherConfig = {
-    targets: [
-      {
-        dir: "sandbox/npm-starter-sample-module/src",
-        name: "npm-starter-sample-module"
-      }
-    ],
-    options: {
-      cwd: process.env.configRootDir,
-      ignored: [
-        "node_modules",
-        "sandbox/npm-starter-sample-module/node_modules",
-        "sandbox/npm-starter-sample-module/.git"
-      ],
-      ignoreInitial: true,
-      ignorePermissionErrors: true,
-      followSymlinks: true
-    }
-  };
-  */
+//   *******************************************************************
+//   * getWatcherConfig Sample Output
+//   *******************************************************************
+//   const watcherConfig = {
+//   "targets": [
+//     {
+//       "childDirPath": "sandbox/npm-starter-sample-module/src",
+//       "childPackagePath": "sandbox/npm-starter-sample-module/package.json"
+//     }
+//   ],
+//   "options": {
+//     "cwd": "/Users/alechp/Code/servexyz/protato/.repositories/protato-lib",
+//     "ignored": [
+//       "node_modules/**/*",
+//       "sandbox/npm-starter-sample-module/node_modules/**/*"
+//     ],
+//     "ignoreInitial": true,
+//     "ignorePermissionErrors": true,
+//     "followSymlinks": true
+//   }
+// }
+//   *******************************************************************
