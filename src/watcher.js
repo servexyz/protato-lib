@@ -7,6 +7,7 @@
 const log = console.log;
 import fs from "fs-extra";
 import chalk from "chalk";
+import chokidar from "chokidar";
 import { printMirror, pathsExistOrThrow, printLine } from "./utilities";
 
 const sampleConfig = {
@@ -34,6 +35,7 @@ function PTOWatcher(oWatcherConfig) {
   pathsExistOrThrow(oWatcherConfig.targets);
   this.targets = oWatcherConfig.targets;
   this.options = oWatcherConfig.options;
+  this.directoriesToWatch = undefined;
   return this;
 }
 
@@ -49,11 +51,29 @@ PTOWatcher.prototype.getDirectoriesToWatch = function getDirectoriesToWatch() {
   this.directoriesToWatch = directories;
   return this;
 };
-PTOWatcher.prototype.createWatcher = function createWatcher() {};
+PTOWatcher.prototype.createWatcher = function createWatcher() {
+  const { directoriesToWatch, options } = this;
+  pathsExistOrThrow(directoriesToWatch);
+  printMirror({ directoriesToWatch }, "blue", "grey");
+  var watcher;
+  //TODO: Add a new sample repo to repogen
+  //TODO: Create backup config to test whether this works with 2+ directories
+  if (directoriesToWatch.length > 0) {
+    watcher = chokidar.watch(directoriesToWatch[0], { ...options });
+  }
+  if (directoriesToWatch.length > 1) {
+    for (let i = 1; i < directoriesToWatch.length; i++) {
+      watcher.add(directoriesToWatch[i]);
+    }
+  }
+  watcher.on("change", modifiedChildPath => {
+    printMirror({ modifiedChildPath }, "green", "grey");
+  });
+};
 
 function getLinkerConfig(oWatcherConfig) {
   let watcher = new PTOWatcher(oWatcherConfig);
-  watcher.getDirectoriesToWatch();
+  watcher.getDirectoriesToWatch().createWatcher();
   let dirs = watcher.directoriesToWatch;
   // printMirror({ dirs }, "magenta", "grey");
 }
