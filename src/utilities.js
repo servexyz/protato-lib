@@ -150,7 +150,10 @@ export function printLine(colorOrOptions) {
   }
 }
 
-export async function pathsExistOrThrow(arrPathsObj, szPreErrorMessage) {
+export async function pathsExistOrThrow(
+  arrPathsObj,
+  szPreErrorMessage = "Path did not exist"
+) {
   //TODO: Consider adding a return value (or prom) so it can be caught inline
   //TODO: Consider adding option to include printLine & printMirrors for success cases
   //TODO: Convert below into unit test (should pass)
