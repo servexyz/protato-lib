@@ -42,7 +42,6 @@ export function getChalkColor(szColor) {
 }
 
 //TODO: Create an enum of available colors (instead of relying on strings)
-//TODO: Add a printJSONMirror to enable print JSON values (or modify printMirror)
 export function printMirror(
   oVar,
   szKeyColor,
@@ -54,7 +53,11 @@ export function printMirror(
   key = Object.keys(oVar)[0];
 
   if (isEmpty(szVarValueOverride)) {
-    value = Object.values(oVar)[0];
+    if (typeof Object.values(oVar)[0] == "object") {
+      value = JSON.stringify(Object.values(oVar)[0], null, 2);
+    } else {
+      value = Object.values(oVar)[0];
+    }
   } else {
     value = szVarValueOverride;
   }

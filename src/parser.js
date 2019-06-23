@@ -5,26 +5,7 @@
   2a. Do this via: getWatcherConfig
   2ai. Do this via: [getWatchTargets, getWatchOptions]
 
-* Sample Output 
-  const watcherConfig = {
-    targets: [
-      {
-        dir: "sandbox/npm-starter-sample-module/src",
-        name: "npm-starter-sample-module"
-      }
-    ],
-    options: {
-      cwd: process.env.configRootDir,
-      ignored: [
-        "node_modules",
-        "sandbox/npm-starter-sample-module/node_modules",
-        "sandbox/npm-starter-sample-module/.git"
-      ],
-      ignoreInitial: true,
-      ignorePermissionErrors: true,
-      followSymlinks: true
-    }
-  };
+
 */
 
 const log = console.log;
@@ -41,21 +22,15 @@ function PTOParser(config) {
       "children"
     )} objects were both found`
   );
-  log(
-    `${chalk.yellow("parent")}: ${chalk.grey(JSON.stringify(parent, null, 2))}`
-  );
-  log(
-    `${chalk.yellow("children")}: ${chalk.grey(
-      JSON.stringify(children, null, 2)
-    )}`
-  );
+  printMirror({ parent }, "yellow", "grey");
+  printMirror({ children }, "yellow", "grey");
   printLine("yellow");
+
   this.watcher = { targets: undefined, options: undefined };
   this.config = config;
   this.config.parent = config.parent;
   this.config.children = config.children;
   return this;
-  // this.getWatcherTargets(config.children);
 }
 
 PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
@@ -144,7 +119,7 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
   });
 
   this.watcher.options = {
-    cwd: process.env.configRootDir,
+    cwd: process.env.configRootDir || process.cwd(),
     ignored: ["node_modules/**/*", ...childrenDirectoriesToIgnore],
     ignoreInitial: true,
     ignorePermissionErrors: true,
@@ -156,6 +131,7 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
 
 function getWatcherConfig(oConfig) {
   let parser = new PTOParser(oConfig);
+
   parser.getWatcherTargets().getWatcherOptions();
 
   const {
@@ -170,6 +146,33 @@ function getWatcherConfig(oConfig) {
     )}`
   );
   printLine("yellow");
+  return {
+    targets,
+    options
+  };
 }
 
 export { PTOParser, getWatcherConfig };
+
+/*
+  * getWatcherConfig Sample Output 
+  const watcherConfig = {
+    targets: [
+      {
+        dir: "sandbox/npm-starter-sample-module/src",
+        name: "npm-starter-sample-module"
+      }
+    ],
+    options: {
+      cwd: process.env.configRootDir,
+      ignored: [
+        "node_modules",
+        "sandbox/npm-starter-sample-module/node_modules",
+        "sandbox/npm-starter-sample-module/.git"
+      ],
+      ignoreInitial: true,
+      ignorePermissionErrors: true,
+      followSymlinks: true
+    }
+  };
+  */

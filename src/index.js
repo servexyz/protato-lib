@@ -1,4 +1,7 @@
 import { getWatcherConfig } from "./parser";
+import { printMirror } from "./utilities";
 import config from "../.protato";
 
-getWatcherConfig(config);
+let obj = getWatcherConfig(config);
+
+printMirror({ obj }, "green", "white");
