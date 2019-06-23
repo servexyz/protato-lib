@@ -7,7 +7,7 @@ let oWC = getWatcherConfig(userConfig);
 
 printMirror({ oWC }, "green", "white");
 
-PTOWatcher(oWC);
-// let oLC = getLinkerConfig(oWC);
+//TODO: Define process.env.configRootDir
+let oLC = getLinkerConfig(oWC);
 
 // printMirror({ oLC }, "blue", "white");

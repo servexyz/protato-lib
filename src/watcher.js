@@ -7,13 +7,13 @@
 const log = console.log;
 import fs from "fs-extra";
 import chalk from "chalk";
-import { printMirror, pathsExistOrThrow } from "./utilities";
+import { printMirror, pathsExistOrThrow, printLine } from "./utilities";
 
 const sampleConfig = {
   targets: [
     {
-      dir: "sandbox/npm-starter-sample-module/src",
-      name: "npm-starter-sample-module"
+      childDirPath: "sandbox/npm-starter-sample-module/src",
+      childPackagePath: "sandbox/npm-starter-sample-module/package.json"
     }
   ],
   options: {
@@ -31,13 +31,31 @@ const sampleConfig = {
 
 //TODO: Replace file checks with utility function
 function PTOWatcher(oWatcherConfig) {
-  const { targets, options } = oWatcherConfig;
-  pathsExistOrThrow(targets);
+  pathsExistOrThrow(oWatcherConfig.targets);
+  this.targets = oWatcherConfig.targets;
+  this.options = oWatcherConfig.options;
+  return this;
 }
 
-function getLinkerConfig() {
-  log(`k`);
-  return;
+PTOWatcher.prototype.getDirectoriesToWatch = function getDirectoriesToWatch() {
+  let directories = [];
+  this.targets.map(({ childDirPath, childPackagePath }) => {
+    printLine("blue");
+    printMirror({ childDirPath }, "blue", "grey");
+    printMirror({ childPackagePath }, "blue", "grey");
+    printLine("blue");
+    directories.push(childDirPath);
+  });
+  this.directoriesToWatch = directories;
+  return this;
+};
+PTOWatcher.prototype.createWatcher = function createWatcher() {};
+
+function getLinkerConfig(oWatcherConfig) {
+  let watcher = new PTOWatcher(oWatcherConfig);
+  watcher.getDirectoriesToWatch();
+  let dirs = watcher.directoriesToWatch;
+  // printMirror({ dirs }, "magenta", "grey");
 }
 
 export { PTOWatcher, getLinkerConfig, sampleConfig };
