@@ -12,7 +12,7 @@ const log = console.log;
 import path from "path";
 import chalk from "chalk";
 import fs from "fs-extra";
-import { printLine, printMirror, printMarquee } from "./utilities";
+import { printLine, printMirror, pathsExistOrThrow } from "./utilities";
 
 function PTOParser(config) {
   const { parent, children } = config;
@@ -39,29 +39,35 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
   let targets = children.map(oChild => {
     let { dir, src } = oChild;
     let childDirPath = path.join(dir, src);
-    let childPackagePath = path.join(childDirPath, "package.json");
-    (async () => {
-      try {
-        await fs.ensureDir(childDirPath);
-        await fs.ensureFile(childPackagePath);
-        printLine("blue");
-        log(
-          `${chalk.blue("childDirPath")} and ${chalk.blue(
-            "childPackagePath"
-          )} were both found`
-        );
-        printMirror({ childDirPath }, "blue", "grey");
-        printMirror({ childPackagePath }, "blue", "grey");
-        printLine("blue");
-      } catch (err) {
-        throw new Error(
-          `${chalk.red(
-            "getWatcherTargets :: childDirPath & childPackagePath existence check"
-          )} \n ${chalk.grey(err)}`
-        );
-      }
-    })();
-    return childDirPath;
+    let childPackagePath = path.join(dir, "package.json");
+
+    let pathsToCheck = [childDirPath, childPackagePath];
+    pathsExistOrThrow(
+      pathsToCheck,
+      "getWatcherTargets' directory and package path existence check"
+    );
+    // (async () => {
+    //   try {
+    //     await fs.access(childDirPath);
+    //     await fs.access(childPackagePath);
+    //     printLine("blue");
+    //     log(
+    //       `${chalk.blue("childDirPath")} and ${chalk.blue(
+    //         "childPackagePath"
+    //       )} were both found`
+    //     );
+    //     printMirror({ childDirPath }, "blue", "grey");
+    //     printMirror({ childPackagePath }, "blue", "grey");
+    //     printLine("blue");
+    //   } catch (err) {
+    //     throw new Error(
+    //       `${chalk.red(
+    //         "getWatcherTargets :: childDirPath & childPackagePath existence check"
+    //       )} \n ${chalk.grey(err)}`
+    //     );
+    //   }
+    // })();
+    return { childDirPath, childPackagePath };
   });
   this.watcher.targets = targets;
   if (this.watcher.targets !== undefined) {
@@ -77,32 +83,15 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
   return this;
 };
 
+//TODO: Replace file checks with utility function
 PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
-  /*
-  TODO: derive children's node_module directories via this.watcher.targets
-  TODO: set this.watcher.options = {}
-  {
-    options: {
-        cwd: process.env.configRootDir,
-        ignored: [
-          "node_modules",
-          "sandbox/npm-starter-sample-module/node_modules",
-          "sandbox/npm-starter-sample-module/.git"
-        ],
-        ignoreInitial: true,
-        ignorePermissionErrors: true,
-        followSymlinks: true
-      }
-    } 
-  }
-*/
   let childrenDirectoriesToIgnore = [];
 
   function getChildNodeModulesPath(szChildTargetPath) {
     let potentialPath = path.join(szChildTargetPath, "node_modules", "**", "*");
     (async () => {
       try {
-        await fs.ensureDir(potentialPath);
+        await fs.access(potentialPath);
         printLine("green");
         printMirror({ childrenDirectoriesToIgnore }, "green", "grey");
         printLine("green");
@@ -154,25 +143,25 @@ function getWatcherConfig(oConfig) {
 
 export { PTOParser, getWatcherConfig };
 
-/*
-  * getWatcherConfig Sample Output 
-  const watcherConfig = {
-    targets: [
-      {
-        dir: "sandbox/npm-starter-sample-module/src",
-        name: "npm-starter-sample-module"
-      }
-    ],
-    options: {
-      cwd: process.env.configRootDir,
-      ignored: [
-        "node_modules",
-        "sandbox/npm-starter-sample-module/node_modules",
-        "sandbox/npm-starter-sample-module/.git"
-      ],
-      ignoreInitial: true,
-      ignorePermissionErrors: true,
-      followSymlinks: true
-    }
-  };
-  */
+//   *******************************************************************
+//   * getWatcherConfig Sample Output
+//   *******************************************************************
+//   const watcherConfig = {
+//   "targets": [
+//     {
+//       "childDirPath": "sandbox/npm-starter-sample-module/src",
+//       "childPackagePath": "sandbox/npm-starter-sample-module/package.json"
+//     }
+//   ],
+//   "options": {
+//     "cwd": "/Users/alechp/Code/servexyz/protato/.repositories/protato-lib",
+//     "ignored": [
+//       "node_modules/**/*",
+//       "sandbox/npm-starter-sample-module/node_modules/**/*"
+//     ],
+//     "ignoreInitial": true,
+//     "ignorePermissionErrors": true,
+//     "followSymlinks": true
+//   }
+// }
+//   *******************************************************************
