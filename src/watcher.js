@@ -35,22 +35,24 @@ function PTOWatcher(oWatcherConfig) {
   pathsExistOrThrow(oWatcherConfig.targets);
   this.targets = oWatcherConfig.targets;
   this.options = oWatcherConfig.options;
-  this.directoriesToWatch = undefined;
+  this.directoriesToWatch = [];
+  this.packagesToWatch = [];
   return this;
 }
 
-PTOWatcher.prototype.getDirectoriesToWatch = function getDirectoriesToWatch() {
-  let directories = [];
-  this.targets.map(({ childDirPath, childPackagePath }) => {
+PTOWatcher.prototype.getDirectories = function getDirectories() {
+  let { targets } = this;
+  targets.map(({ childDirPath, childPackagePath }) => {
     printLine("blue");
     printMirror({ childDirPath }, "blue", "grey");
     printMirror({ childPackagePath }, "blue", "grey");
     printLine("blue");
-    directories.push(childDirPath);
+    this.directoriesToWatch.push(childDirPath);
+    this.packagesToWatch.push(childPackagePath);
   });
-  this.directoriesToWatch = directories;
   return this;
 };
+
 PTOWatcher.prototype.createWatcher = function createWatcher() {
   const { directoriesToWatch, options } = this;
   pathsExistOrThrow(directoriesToWatch);
@@ -68,16 +70,34 @@ PTOWatcher.prototype.createWatcher = function createWatcher() {
   }
   watcher.on("change", modifiedChildPath => {
     printMirror({ modifiedChildPath }, "green", "grey");
+    //TODO: Call linker function here
   });
 };
 
 function getLinkerConfig(oWatcherConfig) {
   let watcher = new PTOWatcher(oWatcherConfig);
-  watcher.getDirectoriesToWatch().createWatcher();
-  let dirs = watcher.directoriesToWatch;
-  // printMirror({ dirs }, "magenta", "grey");
+  watcher.getDirectories().createWatcher();
+  const { directoriesToWatch, packagesToWatch } = watcher;
+  printLine("yellow");
+  printMirror({ directoriesToWatch }, "yellow", "grey");
+  printMirror({ packagesToWatch }, "yellow", "grey");
+  printLine("yellow");
+  return {
+    directoriesToWatch,
+    packagesToWatch
+  };
 }
 
-export { PTOWatcher, getLinkerConfig, sampleConfig };
+/*
+  ? Does it make sense to have a Hydrate function besides getLinkerConfig?
+  ? Idea being that you can call watcher.getDirectories() & return those
+  TODO: Create hydrate linker config function
+  TODO: Create helper function for watcher.getDirectories (get, set and return)
+  *  1. watcher.getDirectories().createWatcher()
+  *  2. inject same "watcher" instance into sub-function (to preserve this state)
+  *  3. watcher.hydrateLinkerConfig()  
+  ? Call order might be something like:
+  ? watcher.on("change", path => { linker(path, resp => { resp ? hydrateLinkerConfig() : throw})
+*/
 
-// initWatcher as separate function ?
+export { PTOWatcher, getLinkerConfig, sampleConfig };
