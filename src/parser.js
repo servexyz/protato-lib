@@ -26,15 +26,13 @@ function PTOParser(config) {
   printMirror({ children }, "yellow", "grey");
   printLine("yellow");
 
-  this.watcher = { targets: undefined, options: undefined };
+  this.watcher = { targets: undefined, options: undefined, parent };
   this.config = config;
-  this.config.parent = config.parent;
+  // this.config.parent = config.parent;
   this.config.children = config.children;
   return this;
 }
 
-//TODO: Create PTOParser.prototype.getWatcherParent()
-//TODO: Pass parent.dir to watcher config (which will be used in getLinkerConfig() in watcher.js)
 PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
   children = this.config.children
 ) {
@@ -96,13 +94,14 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
   return this;
 };
 
+//TODO: Pass parent.dir to watcher config (which will be used in getLinkerConfig() in watcher.js)
 function getWatcherConfig(oConfig) {
   let parser = new PTOParser(oConfig);
 
   parser.getWatcherTargets().getWatcherOptions();
 
   const {
-    watcher: { targets, options }
+    watcher: { targets, options, parent }
   } = parser;
 
   printLine("yellow");
@@ -114,6 +113,7 @@ function getWatcherConfig(oConfig) {
   );
   printLine("yellow");
   return {
+    parent,
     targets,
     options
   };

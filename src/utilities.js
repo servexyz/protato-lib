@@ -4,7 +4,8 @@ import fs from "fs-extra";
 const log = console.log;
 
 export function getChalkColor(szColor) {
-  switch (szColor) {
+  let color = szColor.toLowerCase();
+  switch (color) {
     case "red":
       return chalk.red;
     case "orange":

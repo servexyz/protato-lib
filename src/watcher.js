@@ -10,7 +10,10 @@ import chalk from "chalk";
 import chokidar from "chokidar";
 import { printMirror, pathsExistOrThrow, printLine } from "./utilities";
 
+//TODO: Update sampleConfig to include parent directory
+//TODO: Refactor
 const sampleConfig = {
+  parent: "sandbox/node-starter",
   targets: [
     {
       childDirPath: "sandbox/npm-starter-sample-module/src",
@@ -33,6 +36,7 @@ const sampleConfig = {
 //TODO: Replace file checks with utility function
 function PTOWatcher(oWatcherConfig) {
   pathsExistOrThrow(oWatcherConfig.targets);
+  this.parent = oWatcherConfig.parent;
   this.targets = oWatcherConfig.targets;
   this.options = oWatcherConfig.options;
   this.directoriesToWatch = [];
@@ -77,12 +81,20 @@ PTOWatcher.prototype.createWatcher = function createWatcher() {
 function getLinkerConfig(oWatcherConfig) {
   let watcher = new PTOWatcher(oWatcherConfig);
   watcher.getDirectories().createWatcher();
-  const { directoriesToWatch, packagesToWatch } = watcher;
+  const {
+    directoriesToWatch,
+    packagesToWatch,
+    parent,
+    parent: { dir: parentDirectory }
+  } = watcher;
   printLine("yellow");
+  printMirror({ parent }, "yellow", "grey");
+  printMirror({ parentDirectory }, "yellow", "grey");
   printMirror({ directoriesToWatch }, "yellow", "grey");
   printMirror({ packagesToWatch }, "yellow", "grey");
   printLine("yellow");
   return {
+    parentDirectory,
     directoriesToWatch,
     packagesToWatch
   };
