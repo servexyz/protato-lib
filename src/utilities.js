@@ -197,7 +197,6 @@ export async function pathsExistOrThrow(
       }
     } else if (typeof arrPathsObj == "string") {
       // ? handle checking path of single string
-      log(`arrPathsObj is: ${arrPathsObj}`);
       await fs.access(arrPathsObj);
     }
   } catch (err) {
@@ -208,27 +207,3 @@ export async function pathsExistOrThrow(
     throw new Error(message);
   }
 }
-
-/* 
-? pathsExistOrThrow motivation:
-? I kept creating functions like this:
-
-(async () => {
-    Object.values(targets).map(async ({ childDirPath, childPackagePath }) => {
-      printMirror({ childDirPath }, "magenta", "grey");
-      printMirror({ childPackagePath }, "magenta", "grey");
-      try {
-        await fs.access(childDirPath);
-        await fs.access(childPackagePath);
-      } catch (err) {
-        log(
-          `
-        ${chalk.red("PTOWatcher failed to initialize properly <fs.access> \n")} 
-        Official error: ${chalk.grey(err)}
-        `
-        );
-      }
-    });
-  })();
-
-*/

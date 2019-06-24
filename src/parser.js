@@ -46,29 +46,8 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
     let pathsToCheck = [childDirPath, childPackagePath];
     pathsExistOrThrow(
       pathsToCheck,
-      "getWatcherTargets' directory and package path existence check"
+      "getWatcherTargets' directory and package path check"
     );
-    // (async () => {
-    //   try {
-    //     await fs.access(childDirPath);
-    //     await fs.access(childPackagePath);
-    //     printLine("blue");
-    //     log(
-    //       `${chalk.blue("childDirPath")} and ${chalk.blue(
-    //         "childPackagePath"
-    //       )} were both found`
-    //     );
-    //     printMirror({ childDirPath }, "blue", "grey");
-    //     printMirror({ childPackagePath }, "blue", "grey");
-    //     printLine("blue");
-    //   } catch (err) {
-    //     throw new Error(
-    //       `${chalk.red(
-    //         "getWatcherTargets :: childDirPath & childPackagePath existence check"
-    //       )} \n ${chalk.grey(err)}`
-    //     );
-    //   }
-    // })();
     return { childDirPath, childPackagePath };
   });
   this.watcher.targets = targets;
@@ -85,22 +64,15 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
   return this;
 };
 
-//TODO: Replace file checks with utility function
 PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
   let childrenDirectoriesToIgnore = [];
 
   function getChildNodeModulesPath(szChildTargetPath) {
     let potentialPath = path.join(szChildTargetPath, "node_modules", "**", "*");
-    (async () => {
-      try {
-        await fs.access(potentialPath);
-        printLine("green");
-        printMirror({ childrenDirectoriesToIgnore }, "green", "grey");
-        printLine("green");
-      } catch (err) {
-        throw new Error(`${chalk.red("getChildNodeModulesPath")}: ${err}`);
-      }
-    })();
+    pathsExistOrThrow(
+      potentialPath,
+      "getWatcherOptions -> getChildNodeModulesPath() path check"
+    );
     return potentialPath;
   }
 
@@ -108,6 +80,10 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
     const { dir } = child;
     childrenDirectoriesToIgnore.push(getChildNodeModulesPath(dir));
   });
+
+  printLine("green");
+  printMirror({ childrenDirectoriesToIgnore }, "green", "grey");
+  printLine("green");
 
   this.watcher.options = {
     cwd: process.env.configRootDir || process.cwd(),
