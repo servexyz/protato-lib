@@ -33,6 +33,8 @@ function PTOParser(config) {
   return this;
 }
 
+//TODO: Create PTOParser.prototype.getWatcherParent()
+//TODO: Pass parent.dir to watcher config (which will be used in getLinkerConfig() in watcher.js)
 PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
   children = this.config.children
 ) {
