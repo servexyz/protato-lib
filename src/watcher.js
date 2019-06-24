@@ -5,13 +5,10 @@
   2a. Pass watcherConfig.options to chokidar's watcher's options
 */
 const log = console.log;
-import fs from "fs-extra";
 import chalk from "chalk";
 import chokidar from "chokidar";
 import { printMirror, pathsExistOrThrow, printLine } from "./utilities";
 
-//TODO: Update sampleConfig to include parent directory
-//TODO: Refactor
 const sampleConfig = {
   parent: "sandbox/node-starter",
   targets: [
@@ -88,6 +85,8 @@ function getLinkerConfig(oWatcherConfig) {
     parent: { dir: parentDirectory }
   } = watcher;
   printLine("yellow");
+  printMirror({ oWatcherConfig }, "yellow", "grey");
+  printLine({ color: "yellow", character: "." });
   printMirror({ parent }, "yellow", "grey");
   printMirror({ parentDirectory }, "yellow", "grey");
   printMirror({ directoriesToWatch }, "yellow", "grey");
@@ -112,4 +111,4 @@ function getLinkerConfig(oWatcherConfig) {
   ? watcher.on("change", path => { linker(path, resp => { resp ? hydrateLinkerConfig() : throw})
 */
 
-export { PTOWatcher, getLinkerConfig, sampleConfig };
+export { PTOWatcher, getLinkerConfig };

@@ -10,7 +10,10 @@ export async function linker(oLinkerConfig) {
   //TODO: Get { name } from oLinkerConfig.packagesToWatch
   //TODO: Get children directories to `npm link` from oLinkerConfig.directoriesToWatch
   //TODO: Get parent directories to `npm link child` from oLinkerConfig.parentDirectory
-
   const { name } = require(oLinkerConfig);
+  const cmd = {
+    parent: `npm link ${name}`,
+    child: "npm link"
+  };
   shell.cd();
 }
