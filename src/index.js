@@ -6,12 +6,9 @@ import userConfig from "../.protato";
 
 let oWC = getWatcherConfig(userConfig);
 
-printMirror({ oWC }, "green", "white");
+// printMirror({ oWC }, "green", "white");
 
 //TODO: Define process.env.configRootDir
 let w = initWatcher(oWC);
 w.getDirectories();
-log("w.parent.dir: ", w.parent.dir);
-
-// let oLC = getLinkerConfig(oWC);
-// printMirror({ oLC }, "blue", "white");
+// log("w.parent.dir: ", w.parent.dir);

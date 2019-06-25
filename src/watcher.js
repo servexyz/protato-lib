@@ -34,13 +34,13 @@ const sampleConfig = {
 
 //TODO: Replace file checks with utility function
 export function PTOWatcher(oWatcherConfig) {
+  printMirror({ oWatcherConfig }, "blue", "grey");
   pathsExistOrThrow(oWatcherConfig.targets);
   this.parent = oWatcherConfig.parent;
   this.targets = oWatcherConfig.targets;
   this.options = oWatcherConfig.options;
   this.directoriesToWatch = [];
   this.packagesToWatch = [];
-  this.linker = undefined;
 
   return this;
 }
@@ -48,10 +48,10 @@ export function PTOWatcher(oWatcherConfig) {
 PTOWatcher.prototype.getDirectories = function getDirectories() {
   let { targets } = this;
   targets.map(({ childDirPath, childPackagePath }) => {
-    printLine("blue");
-    printMirror({ childDirPath }, "blue", "grey");
-    printMirror({ childPackagePath }, "blue", "grey");
-    printLine("blue");
+    // printLine("blue");
+    // printMirror({ childDirPath }, "blue", "grey");
+    // printMirror({ childPackagePath }, "blue", "grey");
+    // printLine("blue");
     this.directoriesToWatch.push(childDirPath);
     this.packagesToWatch.push(childPackagePath);
   });
@@ -76,7 +76,7 @@ PTOWatcher.prototype.createWatcher = function createWatcher() {
   watcher.on("change", modifiedChildPath => {
     printMirror({ modifiedChildPath }, "green", "grey");
     //TODO: Call linker function here
-    linker(modifiedChildPath);
+    linker(modifiedChildPath, this.parent.dir);
   });
 };
 
