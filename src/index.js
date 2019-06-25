@@ -1,5 +1,6 @@
+const log = console.log;
 import { getWatcherConfig } from "./parser";
-import { getLinkerConfig, PTOWatcher } from "./watcher";
+import { initWatcher } from "./watcher";
 import { printMirror } from "./utilities";
 import userConfig from "../.protato";
 
@@ -8,6 +9,9 @@ let oWC = getWatcherConfig(userConfig);
 printMirror({ oWC }, "green", "white");
 
 //TODO: Define process.env.configRootDir
-let oLC = getLinkerConfig(oWC);
+let w = initWatcher(oWC);
+w.getDirectories();
+log("w.parent.dir: ", w.parent.dir);
 
+// let oLC = getLinkerConfig(oWC);
 // printMirror({ oLC }, "blue", "white");

@@ -5,12 +5,14 @@
   2a. Pass watcherConfig.options to chokidar's watcher's options
 */
 const log = console.log;
-import chalk from "chalk";
 import chokidar from "chokidar";
 import { printMirror, pathsExistOrThrow, printLine } from "./utilities";
+import { linker } from "./linker";
 
 const sampleConfig = {
-  parent: "sandbox/node-starter",
+  parent: {
+    dir: "sandbox/node-starter"
+  },
   targets: [
     {
       childDirPath: "sandbox/npm-starter-sample-module/src",
@@ -31,13 +33,15 @@ const sampleConfig = {
 };
 
 //TODO: Replace file checks with utility function
-function PTOWatcher(oWatcherConfig) {
+export function PTOWatcher(oWatcherConfig) {
   pathsExistOrThrow(oWatcherConfig.targets);
   this.parent = oWatcherConfig.parent;
   this.targets = oWatcherConfig.targets;
   this.options = oWatcherConfig.options;
   this.directoriesToWatch = [];
   this.packagesToWatch = [];
+  this.linker = undefined;
+
   return this;
 }
 
@@ -72,32 +76,34 @@ PTOWatcher.prototype.createWatcher = function createWatcher() {
   watcher.on("change", modifiedChildPath => {
     printMirror({ modifiedChildPath }, "green", "grey");
     //TODO: Call linker function here
+    linker(modifiedChildPath);
   });
 };
 
-function getLinkerConfig(oWatcherConfig) {
+export function initWatcher(oWatcherConfig) {
   let watcher = new PTOWatcher(oWatcherConfig);
   watcher.getDirectories().createWatcher();
-  const {
-    directoriesToWatch,
-    packagesToWatch,
-    parent,
-    parent: { dir: parentDirectory }
-  } = watcher;
-  printLine("yellow");
-  printMirror({ oWatcherConfig }, "yellow", "grey");
-  printLine({ color: "yellow", character: "." });
-  printMirror({ parent }, "yellow", "grey");
-  printMirror({ parentDirectory }, "yellow", "grey");
-  printMirror({ directoriesToWatch }, "yellow", "grey");
-  printMirror({ packagesToWatch }, "yellow", "grey");
-  printLine("yellow");
-  return {
-    parentDirectory,
-    directoriesToWatch,
-    packagesToWatch
-  };
+  return watcher;
 }
+
+// function setLinker(oWatcherConfig) {
+//   let watcher = new PTOWatcher(oWatcherConfig);
+//   watcher.getDirectories().createWatcher();
+//   const {
+//     parent: { dir: parentDirectory }
+//   } = watcher;
+
+//   printLine("yellow");
+//   printMirror({ oWatcherConfig }, "yellow", "grey");
+//   printLine({ color: "yellow", character: "." });
+//   printMirror({ parentDirectory }, "yellow", "grey");
+//   printLine("yellow");
+
+//   let linker = new PTOLinker(parentDirectory);
+//   PTOLinker.prototype.parentDirectory = parentDirectory;
+//   printMirror({ linker }, "magenta", "white");
+//   return watcher;
+// }
 
 /*
   ? Does it make sense to have a Hydrate function besides getLinkerConfig?
@@ -110,5 +116,3 @@ function getLinkerConfig(oWatcherConfig) {
   ? Call order might be something like:
   ? watcher.on("change", path => { linker(path, resp => { resp ? hydrateLinkerConfig() : throw})
 */
-
-export { PTOWatcher, getLinkerConfig };
