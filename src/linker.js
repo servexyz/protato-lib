@@ -9,11 +9,17 @@ import { printLine, printMirror } from "./utilities";
 
 export async function linker(szModifiedFilePath, szParentDirPath) {
   if (!isEmpty(szModifiedFilePath) | !isEmpty(szParentDirPath)) {
-    printMirror({ szParentDirPath }, "magenta", "grey");
     try {
       let modifiedRootDir = await pkgRootDir(szModifiedFilePath);
-      printMirror({ modifiedRootDir }, "magenta", "green");
-      log(`modifiedRootDir: ${JSON.stringify(modifiedRootDir, null, 2)}`);
+      let parentRootDir = await pkgRootDir(szParentDirPath);
+
+      printLine("yellow");
+      printMirror({ szParentDirPath }, "yellow", "grey");
+      printMirror({ szModifiedFilePath }, "yellow", "grey");
+      printLine({ color: "yellow", character: "." });
+      printMirror({ parentRootDir }, "yellow", "grey");
+      printMirror({ modifiedRootDir }, "yellow", "grey");
+      printLine("yellow");
 
       const { name } = require(path.join(modifiedRootDir, "package.json"));
 
@@ -30,7 +36,7 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
         printMirror({ data }, "blue", "grey");
       });
 
-      shell.cd(szParentDirPath);
+      shell.cd(parentRootDir);
       const parentDirStream = shell.exec(cmd.parent, { async: true });
       parentDirStream.stdout.on("data", data => {
         printMirror({ data }, "blue", "grey");

@@ -1,7 +1,6 @@
 const log = console.log;
 import { getWatcherConfig } from "./parser";
 import { initWatcher } from "./watcher";
-import { printMirror } from "./utilities";
 import userConfig from "../.protato";
 
 let oWC = getWatcherConfig(userConfig);
