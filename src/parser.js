@@ -97,7 +97,6 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
   return this;
 };
 
-//TODO: Pass parent.dir to watcher config (which will be used in getLinkerConfig() in watcher.js)
 function getWatcherConfig(oConfig) {
   let parser = new PTOParser(oConfig);
 
