@@ -6,7 +6,7 @@
 */
 const log = console.log;
 import chokidar from "chokidar";
-import { printMirror, pathsExistOrThrow, printLine } from "./utilities";
+import { printMirror, pathsExistSync, printLine } from "./utilities";
 import { linker } from "./linker";
 
 const sampleConfig = {
@@ -35,7 +35,7 @@ const sampleConfig = {
 //TODO: Replace file checks with utility function
 export function PTOWatcher(oWatcherConfig) {
   printMirror({ oWatcherConfig }, "blue", "grey");
-  pathsExistOrThrow(oWatcherConfig.targets);
+  pathsExistSync(oWatcherConfig.targets);
   this.parent = oWatcherConfig.parent;
   this.targets = oWatcherConfig.targets;
   this.options = oWatcherConfig.options;
@@ -60,7 +60,7 @@ PTOWatcher.prototype.getDirectories = function getDirectories() {
 
 PTOWatcher.prototype.createWatcher = function createWatcher() {
   const { directoriesToWatch, options } = this;
-  pathsExistOrThrow(directoriesToWatch);
+  pathsExistSync(directoriesToWatch);
   printMirror({ directoriesToWatch }, "blue", "grey");
   var watcher;
   //TODO: Add a new sample repo to repogen

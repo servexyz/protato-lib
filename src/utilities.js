@@ -151,7 +151,7 @@ export function printLine(colorOrOptions) {
   }
 }
 
-export function pathsExist(arrPathsObj, szPreErrorMessage) {
+export function pathsExistProm(arrPathsObj, szPreErrorMessage) {
   return new Promise(async (resolve, reject) => {
     try {
       if (Array.isArray(arrPathsObj)) {
@@ -167,7 +167,7 @@ export function pathsExist(arrPathsObj, szPreErrorMessage) {
     }
   });
 }
-export async function pathsExistOrThrow(
+export async function pathsExistSync(
   arrPathsObj,
   szPreErrorMessage = "Path did not exist"
 ) {

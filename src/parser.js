@@ -15,8 +15,8 @@ import fs from "fs-extra";
 import {
   printLine,
   printMirror,
-  pathsExistOrThrow,
-  pathsExist
+  pathsExistSync,
+  pathsExistProm
 } from "./utilities";
 
 function PTOParser(config) {
@@ -56,7 +56,7 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
     //   pathsToCheck,
     //   "getWatcherTargets' directory and package path check"
     // );
-    pathsExist(childDirPath, childPackagePath);
+    pathsExistProm(childDirPath, childPackagePath);
     return { childDirPath, childPackagePath };
   });
   this.watcher.targets = targets;
@@ -78,7 +78,7 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
 
   function getChildNodeModulesPath(szChildTargetPath) {
     let potentialPath = path.join(szChildTargetPath, "node_modules");
-    pathsExistOrThrow(
+    pathsExistSync(
       potentialPath,
       "getWatcherOptions -> getChildNodeModulesPath() path check"
     );
