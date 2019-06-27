@@ -92,6 +92,7 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
 
     childrenDirectoriesToIgnore.push(getChildNodeModulesPath(dir));
   });
+
   printLine({ character: ".", color: "green" });
   printMirror({ childrenDirectoriesToIgnore }, "green", "grey");
   printLine("green");

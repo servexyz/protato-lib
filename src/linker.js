@@ -30,7 +30,10 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
         printMirror({ data }, "blue", "grey");
       });
 
-      shell.cd(szParentDirPath);
+      //TODO: Fix relative pathing issue here (sandbox/node-starter) not found
+      let parentRootDir = await pkgRootDir(szParentDirPath);
+      // shell.cd(szParentDirPath);
+      shell.cd(parentRootDir);
       const parentDirStream = shell.exec(cmd.parent, { async: true });
       parentDirStream.stdout.on("data", data => {
         printMirror({ data }, "blue", "grey");
