@@ -12,12 +12,7 @@ const log = console.log;
 import path from "path";
 import chalk from "chalk";
 import fs from "fs-extra";
-import {
-  printLine,
-  printMirror,
-  pathsExistSync,
-  pathsExistProm
-} from "./utilities";
+import { printLine, printMirror, pathsExistSync } from "./utilities";
 
 function PTOParser(config) {
   const { parent, children } = config;
@@ -33,7 +28,6 @@ function PTOParser(config) {
 
   this.watcher = { targets: undefined, options: undefined, parent };
   this.config = config;
-  // this.config.parent = config.parent;
   this.config.children = config.children;
   return this;
 }
@@ -43,20 +37,15 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
 ) {
   let targets = children.map(oChild => {
     let { dir, src } = oChild;
-    // let childDirPath = path.join(dir, src);
-    // let childPackagePath = path.join(dir, "package.json");
-    // let pathsToCheck = [childDirPath, childPackagePath];
     let rootDir = process.env.configRootDir || process.cwd();
-
     let childDirPath = path.join(rootDir, dir, src);
     let childPackagePath = path.join(rootDir, dir, "package.json");
     let pathsToCheck = [childDirPath, childPackagePath];
 
-    // pathsExistOrThrow(
-    //   pathsToCheck,
-    //   "getWatcherTargets' directory and package path check"
-    // );
-    pathsExistProm(childDirPath, childPackagePath);
+    pathsExistSync(
+      pathsToCheck,
+      "getWatcherTargets' directory and package path check"
+    );
     return { childDirPath, childPackagePath };
   });
   this.watcher.targets = targets;
@@ -134,26 +123,3 @@ function getWatcherConfig(oConfig) {
 }
 
 export { PTOParser, getWatcherConfig };
-
-//   *******************************************************************
-//   * getWatcherConfig Sample Output
-//   *******************************************************************
-//   const watcherConfig = {
-//   "targets": [
-//     {
-//       "childDirPath": "sandbox/npm-starter-sample-module/src",
-//       "childPackagePath": "sandbox/npm-starter-sample-module/package.json"
-//     }
-//   ],
-//   "options": {
-//     "cwd": "/Users/alechp/Code/servexyz/protato/.repositories/protato-lib",
-//     "ignored": [
-//       "node_modules/**/*",
-//       "sandbox/npm-starter-sample-module/node_modules/**/*"
-//     ],
-//     "ignoreInitial": true,
-//     "ignorePermissionErrors": true,
-//     "followSymlinks": true
-//   }
-// }
-//   *******************************************************************
