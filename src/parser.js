@@ -12,7 +12,12 @@ const log = console.log;
 import path from "path";
 import chalk from "chalk";
 import fs from "fs-extra";
-import { printLine, printMirror, pathsExistOrThrow } from "./utilities";
+import {
+  printLine,
+  printMirror,
+  pathsExistOrThrow,
+  pathsExist
+} from "./utilities";
 
 function PTOParser(config) {
   const { parent, children } = config;
@@ -38,14 +43,20 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
 ) {
   let targets = children.map(oChild => {
     let { dir, src } = oChild;
-    let childDirPath = path.join(dir, src);
-    let childPackagePath = path.join(dir, "package.json");
+    // let childDirPath = path.join(dir, src);
+    // let childPackagePath = path.join(dir, "package.json");
+    // let pathsToCheck = [childDirPath, childPackagePath];
+    let rootDir = process.env.configRootDir || process.cwd();
 
+    let childDirPath = path.join(rootDir, dir, src);
+    let childPackagePath = path.join(rootDir, dir, "package.json");
     let pathsToCheck = [childDirPath, childPackagePath];
-    pathsExistOrThrow(
-      pathsToCheck,
-      "getWatcherTargets' directory and package path check"
-    );
+
+    // pathsExistOrThrow(
+    //   pathsToCheck,
+    //   "getWatcherTargets' directory and package path check"
+    // );
+    pathsExist(childDirPath, childPackagePath);
     return { childDirPath, childPackagePath };
   });
   this.watcher.targets = targets;
@@ -66,7 +77,7 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
   let childrenDirectoriesToIgnore = [];
 
   function getChildNodeModulesPath(szChildTargetPath) {
-    let potentialPath = path.join(szChildTargetPath, "node_modules", "**", "*");
+    let potentialPath = path.join(szChildTargetPath, "node_modules");
     pathsExistOrThrow(
       potentialPath,
       "getWatcherOptions -> getChildNodeModulesPath() path check"
@@ -74,12 +85,14 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
     return potentialPath;
   }
 
+  printLine("green");
   this.config.children.map(child => {
     const { dir } = child;
+    printMirror({ dir }, "green", "grey");
+
     childrenDirectoriesToIgnore.push(getChildNodeModulesPath(dir));
   });
-
-  printLine("green");
+  printLine({ character: ".", color: "green" });
   printMirror({ childrenDirectoriesToIgnore }, "green", "grey");
   printLine("green");
 
