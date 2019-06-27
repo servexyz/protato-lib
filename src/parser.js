@@ -77,7 +77,7 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
   let childrenDirectoriesToIgnore = [];
 
   function getChildNodeModulesPath(szChildTargetPath) {
-    let potentialPath = path.join(szChildTargetPath, "node_modules", "**", "*");
+    let potentialPath = path.join(szChildTargetPath, "node_modules");
     pathsExistOrThrow(
       potentialPath,
       "getWatcherOptions -> getChildNodeModulesPath() path check"
