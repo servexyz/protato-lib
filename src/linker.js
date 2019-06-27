@@ -5,8 +5,8 @@ import shell from "shelljs";
 import isEmpty from "is-empty";
 import pkgRootDir from "pkg-dir";
 import { printLine, printMirror } from "./utilities";
-//TODO: Add watcher imports
 
+// ? Do I need to
 export async function linker(szModifiedFilePath, szParentDirPath) {
   if (!isEmpty(szModifiedFilePath) | !isEmpty(szParentDirPath)) {
     printMirror({ szParentDirPath }, "magenta", "grey");
@@ -30,7 +30,6 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
         printMirror({ data }, "blue", "grey");
       });
 
-      //TODO: Fix relative pathing issue here (sandbox/node-starter) not found
       let parentRootDir = await pkgRootDir(szParentDirPath);
       // shell.cd(szParentDirPath);
       shell.cd(parentRootDir);
