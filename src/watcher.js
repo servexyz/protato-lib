@@ -1,5 +1,5 @@
 import chokidar from "chokidar";
-import { printMirror, pathsExistSync } from "./utilities";
+import { printMirror, printLine, pathsExistSync } from "./utilities";
 import { linker } from "./linker";
 
 const sampleConfig = {
@@ -67,7 +67,6 @@ PTOWatcher.prototype.createWatcher = function createWatcher() {
   }
   watcher.on("change", modifiedChildPath => {
     printMirror({ modifiedChildPath }, "green", "grey");
-    //TODO: Call linker function here
     linker(modifiedChildPath, this.parent.dir);
   });
 };
