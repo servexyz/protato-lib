@@ -6,11 +6,12 @@ import isEmpty from "is-empty";
 import pkgRootDir from "pkg-dir";
 import { printLine, printMirror } from "./utilities";
 
-// ? Do I need to
 export async function linker(szModifiedFilePath, szParentDirPath) {
   if (!isEmpty(szModifiedFilePath) | !isEmpty(szParentDirPath)) {
+    printMirror({ szModifiedFilePath }, "magenta", "grey");
     printMirror({ szParentDirPath }, "magenta", "grey");
     try {
+      // TODO: debug why modifiedRootDir is being preserved from previous call
       let modifiedRootDir = await pkgRootDir(szModifiedFilePath);
       printMirror({ modifiedRootDir }, "magenta", "green");
       log(`modifiedRootDir: ${JSON.stringify(modifiedRootDir, null, 2)}`);
@@ -23,7 +24,6 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
         parent: `npm link ${name}`,
         child: "npm link"
       };
-
       shell.cd(modifiedRootDir);
       const modifiedDirStream = shell.exec(cmd.child, { async: true });
       modifiedDirStream.stdout.on("data", data => {
