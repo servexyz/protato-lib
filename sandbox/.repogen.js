@@ -3,7 +3,8 @@ const config = {
   repospacePath: __dirname,
   repositories: [
     { servexyz: "node-starter" },
-    { servexyz: "npm-starter-sample-module" }
+    { servexyz: "npm-starter-sample-module" },
+    { servexyz: "library-genesis" }
   ]
 }
 
