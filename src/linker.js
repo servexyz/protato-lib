@@ -14,10 +14,11 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
       // TODO: debug why modifiedRootDir is being preserved from previous call
       let modifiedRootDir = await pkgRootDir(szModifiedFilePath);
       printMirror({ modifiedRootDir }, "magenta", "green");
-      log(`modifiedRootDir: ${JSON.stringify(modifiedRootDir, null, 2)}`);
 
-      const { name } = require(path.join(modifiedRootDir, "package.json"));
+      let modifiedPkgPath = path.join(modifiedRootDir, "package.json");
+      printMirror({ modifiedPkgPath }, "magenta", "green");
 
+      const { name } = require(modifiedPkgPath);
       printMirror({ name }, "blue", "grey");
 
       const cmd = {
