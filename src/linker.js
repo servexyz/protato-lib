@@ -3,8 +3,8 @@ import chalk from "chalk";
 import path from "path";
 import shell from "shelljs";
 import isEmpty from "is-empty";
-// import pkgDir from "pkg-dir";
-import { printLine, printMirror, pkgDir } from "./utilities";
+import pkgDir from "pkg-dir";
+import { printLine, printMirror } from "./utilities";
 
 export async function linker(szModifiedFilePath, szParentDirPath) {
   if (!isEmpty(szModifiedFilePath) | !isEmpty(szParentDirPath)) {

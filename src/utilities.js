@@ -1,13 +1,7 @@
 import chalk from "chalk";
 import isEmpty from "is-empty";
 import fs from "fs-extra";
-import findUp from "find-up";
 const log = console.log;
-
-export async function pkgDir(cwd) {
-  let filePath = await findUp("package.json", { cwd });
-  return filePath && path.dirname(filePath);
-}
 
 export function getChalkColor(szColor) {
   let color = szColor.toLowerCase();
