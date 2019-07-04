@@ -1,15 +1,19 @@
 const log = console.log;
 import chalk from "chalk";
 import path from "path";
-// import shell from "shelljs";
 import isEmpty from "is-empty";
 import pkgDir from "pkg-dir";
 import exec from "await-exec";
 
 import { printLine, printMirror } from "./utilities";
 
-const parentCmd = (name, dir) => `npm link --prefix ${dir} ${name}`;
-
+const parentCmd = (name, dir) => {
+  if (isEmpty(dir)) {
+    return `npm link ${name}`;
+  } else {
+    return `npm link --prefix ${dir} ${name}`;
+  }
+};
 export async function linker(szModifiedFilePath, szParentDirPath) {
   if (!isEmpty(szModifiedFilePath) | !isEmpty(szParentDirPath)) {
     printMirror({ szModifiedFilePath }, "magenta", "grey");
@@ -33,7 +37,7 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
       let parentRootDir = await pkgDir(szParentDirPath);
       printMirror({ parentRootDir }, "magenta", "green");
       await exec(`cd ${parentRootDir}`);
-      let parentData = await exec(cmd.parent);
+      let parentData = await exec(parentCmd(name));
       printLine("yellow");
       log(`parentData: ${JSON.stringify(parentData, null, 2)}`);
       printLine("yellow");
