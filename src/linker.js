@@ -1,9 +1,11 @@
 const log = console.log;
 import chalk from "chalk";
 import path from "path";
-import shell from "shelljs";
+// import shell from "shelljs";
 import isEmpty from "is-empty";
 import pkgDir from "pkg-dir";
+import exec from "await-exec";
+
 import { printLine, printMirror } from "./utilities";
 
 export async function linker(szModifiedFilePath, szParentDirPath) {
@@ -11,32 +13,31 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
     printMirror({ szModifiedFilePath }, "magenta", "grey");
     printMirror({ szParentDirPath }, "magenta", "grey");
     try {
-      // TODO: debug why modifiedRootDir is being preserved from previous call
       let modifiedRootDir = await pkgDir(szModifiedFilePath);
+      printLine("blue");
       printMirror({ modifiedRootDir }, "magenta", "green");
-
       let modifiedPkgPath = path.join(modifiedRootDir, "package.json");
       printMirror({ modifiedPkgPath }, "magenta", "green");
-
       const { name } = require(modifiedPkgPath);
       printMirror({ name }, "blue", "grey");
-
+      printLine("blue");
       const cmd = {
         parent: `npm link ${name}`,
         child: "npm link"
       };
-      shell.cd(modifiedRootDir);
-      const modifiedDirStream = shell.exec(cmd.child, { async: true });
-      modifiedDirStream.stdout.on("data", data => {
-        printMirror({ data }, "blue", "grey");
-      });
+      await exec(`cd ${modifiedRootDir}`);
+      let childData = await exec(cmd.child);
+      printLine("green");
+      log(`childData: ${JSON.stringify(childData, null, 2)}`);
+      printLine("green");
 
+      await exec(`cd ${modifiedRootDir}`);
       let parentRootDir = await pkgDir(szParentDirPath);
-      shell.cd(parentRootDir);
-      const parentDirStream = shell.exec(cmd.parent, { async: true });
-      parentDirStream.stdout.on("data", data => {
-        printMirror({ data }, "blue", "grey");
-      });
+      await exec(`cd ${parentRootDir}`);
+      let parentData = await exec(cmd.parent);
+      printLine("yellow");
+      log(`parentData: ${JSON.stringify(parentData, null, 2)}`);
+      printLine("yellow");
     } catch (err) {
       log(`${chalk.red("linker")}: \n ${chalk.white(err)}`);
     }
