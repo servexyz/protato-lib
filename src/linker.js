@@ -27,6 +27,7 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
       printLine("blue");
       await exec(`cd ${modifiedRootDir}`);
       childData = await exec(`yalc publish`);
+      log(`cwd: ${process.cwd()}`);
       printLine("green");
       log(`childData: ${JSON.stringify(childData, null, 2)}`);
       printLine("green");
