@@ -4,14 +4,11 @@
   2. Transform user config into: [ watchTargets, watchOptions ]
   2a. Do this via: getWatcherConfig
   2ai. Do this via: [getWatchTargets, getWatchOptions]
-
-
 */
 
 const log = console.log;
 import path from "path";
 import chalk from "chalk";
-import fs from "fs-extra";
 import { printLine, printMirror, pathsExistSync } from "./utilities";
 
 function PTOParser(config) {
@@ -93,13 +90,11 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
     ignorePermissionErrors: true,
     followSymlinks: true
   };
-
   return this;
 };
 
 function getWatcherConfig(oConfig) {
   let parser = new PTOParser(oConfig);
-
   parser.getWatcherTargets().getWatcherOptions();
 
   const {
