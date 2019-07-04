@@ -7,17 +7,14 @@ import exec from "await-exec";
 
 import { printLine, printMirror } from "./utilities";
 
-const parentCmd = (name, dir) => {
-  if (isEmpty(dir)) {
-    return `npm link ${name}`;
-  } else {
-    return `npm link --prefix ${dir} ${name}`;
-  }
-};
+//TODO: Try using yalc instead
+//TODO: Check to see whether yalc installed globally. If not, install. If install fails, throw err & explain
+
 export async function linker(szModifiedFilePath, szParentDirPath) {
   if (!isEmpty(szModifiedFilePath) | !isEmpty(szParentDirPath)) {
     printMirror({ szModifiedFilePath }, "magenta", "grey");
     printMirror({ szParentDirPath }, "magenta", "grey");
+    let childData, parentData, childModuleName;
     try {
       let modifiedRootDir = await pkgDir(szModifiedFilePath);
       printLine("blue");
@@ -25,24 +22,34 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
       let modifiedPkgPath = path.join(modifiedRootDir, "package.json");
       printMirror({ modifiedPkgPath }, "magenta", "green");
       const { name } = require(modifiedPkgPath);
-      printMirror({ name }, "blue", "grey");
+      childModuleName = name;
+      printMirror({ childModuleName }, "blue", "grey");
       printLine("blue");
       await exec(`cd ${modifiedRootDir}`);
-      let childData = await exec(`npm link`);
+      childData = await exec(`yalc publish`);
       printLine("green");
       log(`childData: ${JSON.stringify(childData, null, 2)}`);
       printLine("green");
+    } catch (err) {
+      log(`${chalk.red("'yalc publish' failed")}\n${chalk.grey(err)}`);
+    }
 
-      //TODO: Figure out why linking to protato-lib instead of node-starter
+    try {
       let parentRootDir = await pkgDir(szParentDirPath);
       printMirror({ parentRootDir }, "magenta", "green");
       await exec(`cd ${parentRootDir}`);
-      let parentData = await exec(parentCmd(name));
+      //TODO: Quick hack would be to simply remove the /lib/ prefix.
+      // ? I'm wondering if this is because --prefix is normally usr/local/lib/node_modules
+      parentData = await exec(`yalc link ${childModuleName}`);
       printLine("yellow");
       log(`parentData: ${JSON.stringify(parentData, null, 2)}`);
       printLine("yellow");
     } catch (err) {
-      log(`${chalk.red("linker")}: \n ${chalk.white(err)}`);
+      log(
+        `${chalk.red(
+          `yalc add ${childModuleName} in ${chalk.yellow(parentRootDir)} failed`
+        )}\n${chalk.grey(err)}`
+      );
     }
   } else {
     printLine("green");
