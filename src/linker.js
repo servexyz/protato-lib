@@ -8,6 +8,8 @@ import exec from "await-exec";
 
 import { printLine, printMirror } from "./utilities";
 
+const parentCmd = (name, dir) => `npm link --prefix ${dir} ${name}`;
+
 export async function linker(szModifiedFilePath, szParentDirPath) {
   if (!isEmpty(szModifiedFilePath) | !isEmpty(szParentDirPath)) {
     printMirror({ szModifiedFilePath }, "magenta", "grey");
@@ -21,18 +23,15 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
       const { name } = require(modifiedPkgPath);
       printMirror({ name }, "blue", "grey");
       printLine("blue");
-      const cmd = {
-        parent: `npm link ${name}`,
-        child: "npm link"
-      };
       await exec(`cd ${modifiedRootDir}`);
-      let childData = await exec(cmd.child);
+      let childData = await exec(`npm link`);
       printLine("green");
       log(`childData: ${JSON.stringify(childData, null, 2)}`);
       printLine("green");
 
-      await exec(`cd ${modifiedRootDir}`);
+      //TODO: Figure out why linking to protato-lib instead of node-starter
       let parentRootDir = await pkgDir(szParentDirPath);
+      printMirror({ parentRootDir }, "magenta", "green");
       await exec(`cd ${parentRootDir}`);
       let parentData = await exec(cmd.parent);
       printLine("yellow");
