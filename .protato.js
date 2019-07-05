@@ -6,6 +6,12 @@ export default {
     {
       dir: "sandbox/npm-starter-sample-module",
       src: "src"
+    },
+    {
+      dir: "sandbox/library-genesis",
+      src: "src"
     }
   ]
 };
+
+//TODO: Make "src" default in the parser

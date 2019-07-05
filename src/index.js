@@ -1,3 +1,6 @@
+const logProcessErrors = require("log-process-errors");
+logProcessErrors();
+
 const log = console.log;
 import { getWatcherConfig } from "./parser";
 import { initWatcher } from "./watcher";
