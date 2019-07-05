@@ -1,0 +1,25 @@
+{
+  "name": "library-genesis",
+  "version": "0.5.6-3465bb62",
+  "main": "index.js",
+  "repository": "https://github.com/servexyz/library-genesis",
+  "license": "MIT",
+  "scripts": {
+    "test": "ava"
+  },
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "file-genesis": "^0.6.5"
+  },
+  "ava": {
+    "files": [
+      "!npm-starter-sample-module/**/*.js",
+      "tests/**/*test.js"
+    ],
+    "require": [
+      "@babel/register",
+      "@babel/polyfill"
+    ],
+    "verbose": true
+  }
+}

@@ -25,9 +25,7 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
       childModuleName = name;
       printMirror({ childModuleName }, "blue", "grey");
       printLine("blue");
-      await exec(`cd ${modifiedRootDir}`);
-      childData = await exec(`yalc publish`);
-      log(`cwd: ${process.cwd()}`);
+      childData = await exec(`cd ${modifiedRootDir} && yalc publish`);
       printLine("green");
       log(`childData: ${JSON.stringify(childData, null, 2)}`);
       printLine("green");
@@ -38,10 +36,9 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
     try {
       let parentRootDir = await pkgDir(szParentDirPath);
       printMirror({ parentRootDir }, "magenta", "green");
-      await exec(`cd ${parentRootDir}`);
-      //TODO: Quick hack would be to simply remove the /lib/ prefix.
-      // ? I'm wondering if this is because --prefix is normally usr/local/lib/node_modules
-      parentData = await exec(`yalc link ${childModuleName}`);
+      parentData = await exec(
+        `cd ${parentRootDir} && yalc link ${childModuleName}`
+      );
       printLine("yellow");
       log(`parentData: ${JSON.stringify(parentData, null, 2)}`);
       printLine("yellow");
