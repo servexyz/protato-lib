@@ -1,11 +1,11 @@
 {
   "name": "protato-lib",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "build/main.js",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/servexyz/node-starter"
+    "url": "https://github.com/servexyz/protato-lib"
   },
   "devDependencies": {
     "@ava/babel-preset-stage-4": "^1.1.0",
