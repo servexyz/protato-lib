@@ -16,3 +16,4 @@ sandbox
 .yalc
 docs/logo
 .env.sample
+.vscode
