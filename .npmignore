@@ -17,3 +17,4 @@ sandbox
 docs/logo
 .env.sample
 .vscode
+.protato.js
