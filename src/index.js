@@ -1,17 +1,14 @@
 const logProcessErrors = require("log-process-errors");
 logProcessErrors();
-
 const log = console.log;
+import path from "path";
 import { getWatcherConfig } from "./parser";
 import { initWatcher } from "./watcher";
-import { printMirror } from "./utilities";
-import userConfig from "../.protato";
 
-let oWC = getWatcherConfig(userConfig);
+export function init(cwd = process.env.configRootDir || process.cwd()) {
+  let oWC = getWatcherConfig(path.join(cwd, ".protato.js"));
+  let hWatcher = initWatcher(oWC);
+  hWatcher.getDirectories();
+}
 
-// printMirror({ oWC }, "green", "white");
-
-//TODO: Define process.env.configRootDir
-let w = initWatcher(oWC);
-w.getDirectories();
-// log("w.parent.dir: ", w.parent.dir);
+init();
