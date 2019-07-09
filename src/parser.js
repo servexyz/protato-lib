@@ -9,7 +9,8 @@
 const log = console.log;
 import path from "path";
 import chalk from "chalk";
-import { printLine, printMirror, pathsExistSync } from "./utilities";
+import { printLine, printMirror } from "tacker";
+import { pathsExistSync } from "./utilities";
 
 function PTOParser(config) {
   const { parent, children } = config;

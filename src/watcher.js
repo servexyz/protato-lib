@@ -1,5 +1,6 @@
 import chokidar from "chokidar";
-import { printMirror, printLine, pathsExistSync } from "./utilities";
+import { pathsExistSync } from "./utilities";
+import { printLine, printMirror } from "./utilities";
 import { linker } from "./linker";
 
 const sampleConfig = {

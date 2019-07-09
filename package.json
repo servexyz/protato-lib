@@ -36,7 +36,8 @@
     "dotenv": "^6.1.0",
     "fs-extra": "^8.0.1",
     "is-empty": "^1.2.0",
-    "pkg-dir": "^4.2.0"
+    "pkg-dir": "^4.2.0",
+    "tacker": "^0.1.1"
   },
   "scripts": {
     "start": "npm run dev",

@@ -5,7 +5,7 @@ import isEmpty from "is-empty";
 import pkgDir from "pkg-dir";
 import exec from "await-exec";
 
-import { printLine, printMirror } from "./utilities";
+import { printLine, printMirror } from "tacker";
 
 //TODO: Try using yalc instead
 //TODO: Check to see whether yalc installed globally. If not, install. If install fails, throw err & explain
