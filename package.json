@@ -1,6 +1,6 @@
 {
   "name": "protato-lib",
-  "version": "0.0.7",
+  "version": "0.1.0",
   "main": "build/main.js",
   "license": "MIT",
   "repository": {
@@ -51,9 +51,7 @@
     "test:ava": "ava",
     "test:liveReloadedAva": "ava --watch",
     "build": "webpack --mode production --display minimal",
-    "publish": "npm run build && npm run publish:np",
     "production": "npm run build && node build/main.js",
-    "publish:np": "npx np",
     "ci": "npm run build && npm run ci:local:timed",
     "ci:local": "trevor",
     "ci:local:timed": "npm run ci:local | gnomon --type=elapsed-total",
