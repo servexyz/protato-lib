@@ -26,4 +26,4 @@ export function init(cwd = process.env.configRootDir || process.cwd()) {
     });
 }
 
-init();
+// init();
