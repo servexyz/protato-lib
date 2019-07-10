@@ -2,7 +2,7 @@ import chalk from "chalk";
 import fs from "fs-extra";
 const log = console.log;
 
-export function pathsExistProm(arrPathsObj, szPreErrorMessage) {
+export function pathsExistAsync(arrPathsObj, szPreErrorMessage) {
   return new Promise(async (resolve, reject) => {
     try {
       if (Array.isArray(arrPathsObj)) {
