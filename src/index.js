@@ -54,4 +54,4 @@ const inlineConfig = {
 };
 
 // init();
-init(process.cwd(), inlineConfig);
+// init(process.cwd(), inlineConfig);
