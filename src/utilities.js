@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import fs from "fs-extra";
+import { printLine } from "tacker";
 const log = console.log;
 
 export function pathsExistAsync(arrPathsObj, szPreErrorMessage) {
