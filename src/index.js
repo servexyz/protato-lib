@@ -3,11 +3,11 @@ import path from "path";
 import { getWatcherConfig } from "./parser";
 import { initWatcher } from "./watcher";
 import { printLine, printMirror } from "tacker";
-import { pathsExistProm } from "./utilities";
+import { pathsExistAsync } from "./utilities";
 
 export function init(cwd = process.env.configRootDir || process.cwd()) {
   let protatoPath = path.join(cwd, ".protato.js");
-  pathsExistProm([protatoPath], ".protato.js config not found")
+  pathsExistAsync(protatoPath, ".protato.js config not found")
     .then(resp => {
       printMirror({ resp }, "magenta", "grey");
       let { config } = require(protatoPath);
