@@ -10,5 +10,3 @@ export function init(cwd = process.env.configRootDir || process.cwd()) {
   let hWatcher = initWatcher(oWC);
   hWatcher.getDirectories();
 }
-
-init();
