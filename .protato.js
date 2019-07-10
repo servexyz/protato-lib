@@ -1,4 +1,4 @@
-export default {
+export const config = {
   parent: {
     dir: "sandbox/node-starter"
   },
