@@ -1,5 +1,5 @@
-const logProcessErrors = require("log-process-errors");
-logProcessErrors();
+/*const logProcessErrors = require("log-process-errors");*/
+/*logProcessErrors();*/
 const log = console.log;
 import path from "path";
 import { getWatcherConfig } from "./parser";
