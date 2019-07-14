@@ -45,7 +45,7 @@ export async function pathsExistSync(
   // pathsExistOrThrow(wrongPathString, "PTOWatcher failed to initialize properly <fs.access>");
 
   if (Array.isArray(arrPathsObj)) {
-    let arrFilePaths = arrPathsObj.flatMap(mTarget => {
+    let arrFilePaths = arrPathsObj.map(mTarget => {
       if (typeof mTarget == "object") {
         // * handle array of objects
         // * (ie. default case; used for testing watcherConfig's "targets" array)
