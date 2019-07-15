@@ -4,10 +4,10 @@ import path from "path";
 import isEmpty from "is-empty";
 import pkgDir from "pkg-dir";
 import exec from "await-exec";
+import fs from "fs-extra";
 
 import { printLine, printMirror } from "tacker";
 
-//TODO: Try using yalc instead
 //TODO: Check to see whether yalc installed globally. If not, install. If install fails, throw err & explain
 
 export async function linker(szModifiedFilePath, szParentDirPath) {
@@ -21,7 +21,9 @@ export async function linker(szModifiedFilePath, szParentDirPath) {
       printMirror({ modifiedRootDir }, "magenta", "green");
       let modifiedPkgPath = path.join(modifiedRootDir, "package.json");
       printMirror({ modifiedPkgPath }, "magenta", "green");
-      const { name } = require(modifiedPkgPath);
+      //TODO: Change to fs.readJsonSync
+      const { name } = await fs.readJson(modifiedPkgPath);
+      // const { name } = require(modifiedPkgPath);
       childModuleName = name;
       printMirror({ childModuleName }, "blue", "grey");
       printLine("blue");

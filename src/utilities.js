@@ -65,6 +65,11 @@ export async function pathsExistSync(
       try {
         await fs.access(pathToCheck);
       } catch (err) {
+        /*
+          TODO: Figure out why this is being thrown
+          ? Array of paths failed ----------------------------------------------------------- Path did not exist
+          ? TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be one of type string, Buffer, or URL. Received type object
+        */
         log(
           `${chalk.red("Array of paths failed")} ${printLine(
             "red"
