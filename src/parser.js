@@ -1,11 +1,3 @@
-/*
-  * Objective
-  1. Autodetect user config (ie. ".protato.js")
-  2. Transform user config into: [ watchTargets, watchOptions ]
-  2a. Do this via: getWatcherConfig
-  2ai. Do this via: [getWatchTargets, getWatchOptions]
-*/
-
 const log = console.log;
 import path from "path";
 import chalk from "chalk";
@@ -38,6 +30,11 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
     let rootDir = process.env.configRootDir || process.cwd();
     let childDirPath = path.join(rootDir, dir, src);
     let childPackagePath = path.join(rootDir, dir, "package.json");
+
+    printLine("magenta");
+    printMirror({ childDirPath }, "magenta", "grey");
+    printMirror({ childPackagePath }, "magenta", "grey");
+    printLine("magenta");
     let pathsToCheck = [childDirPath, childPackagePath];
 
     pathsExistSync(
