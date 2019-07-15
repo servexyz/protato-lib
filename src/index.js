@@ -6,6 +6,7 @@ import { getWatcherConfig } from "./parser";
 import { initWatcher } from "./watcher";
 import { printLine, printMirror } from "tacker";
 import { pathsExistAsync } from "./utilities";
+import chalk from "chalk";
 
 export async function init(
   cwd = process.env.configRootDir || process.cwd(),
@@ -13,14 +14,14 @@ export async function init(
 ) {
   let oConfig;
   if (!isEmpty(oConfigOverride)) {
+    printLine("cyan");
+    printMirror({ oConfigOverride }, "cyan", "grey");
+    printLine("cyan");
     oConfig = oConfigOverride;
-    printLine("green");
-    printMirror({ oConfig }, "green", "grey");
-    printLine("green");
   } else {
     let protatoPath = path.resolve(cwd, ".protato.json");
-    printLine("green");
-    printMirror({ protatoPath }, "green", "grey");
+    printLine("cyan");
+    printMirror({ protatoPath }, "cyan", "grey");
     //TODO: Change to fs.readJsonSync
     // let { config } = require(protatoPath);
     oConfig = await fs.readJson(protatoPath);
@@ -29,8 +30,8 @@ export async function init(
       ".protato.json config not found"
     );
     let protatoPathFlag = pathInfo[0];
-    printMirror({ protatoPathFlag }, "green", "grey");
-    printLine("green");
+    printMirror({ protatoPathFlag }, "cyan", "grey");
+    printLine("cyan");
   }
   let oWC = getWatcherConfig(oConfig);
   let hWatcher = initWatcher(oWC);
@@ -53,5 +54,5 @@ const inlineConfig = {
   ]
 };
 
-// init();
+init();
 // init(process.cwd(), inlineConfig);
