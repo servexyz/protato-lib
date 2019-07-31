@@ -2,7 +2,6 @@ const log = console.log;
 import path from "path";
 import chalk from "chalk";
 import { printLine, printMirror } from "tacker";
-import { pathsExistSync } from "./utilities";
 
 function PTOParser(config) {
   const { parent, children } = config;
@@ -35,16 +34,10 @@ PTOParser.prototype.getWatcherTargets = function getWatcherTargets(
     printMirror({ childDirPath }, "magenta", "grey");
     printMirror({ childPackagePath }, "magenta", "grey");
     printLine("magenta");
-    let pathsToCheck = [childDirPath, childPackagePath];
-
-    pathsExistSync(
-      pathsToCheck,
-      "getWatcherTargets' directory and package path check"
-    );
     return { childDirPath, childPackagePath };
   });
   this.watcher.targets = targets;
-  if (this.watcher.targets !== undefined) {
+  if (typeof this.watcher.targets !== "undefined") {
     printLine("yellow");
     log(`${chalk.yellow("watcher targets")} are defined \n`);
     printMirror({ targets }, "yellow", "grey");
@@ -61,12 +54,18 @@ PTOParser.prototype.getWatcherOptions = function getWatcherOptions() {
   let childrenDirectoriesToIgnore = [];
 
   function getChildNodeModulesPath(szChildTargetPath) {
+    if (typeof szChildTargetPath === "undefined") return null;
     let potentialPath = path.join(szChildTargetPath, "node_modules");
-    pathsExistSync(
-      potentialPath,
-      "getWatcherOptions -> getChildNodeModulesPath() path check"
-    );
+    // pathsExistSync(
+    //   potentialPath,
+    //   "getWatcherOptions -> getChildNodeModulesPath() path check"
+    // );
     return potentialPath;
+    // if (await pathsExist(potentialPath)) {
+    //   return potentialPath;
+    // } else {
+    //   return false;
+    // }
   }
 
   printLine("green");

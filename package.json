@@ -34,6 +34,7 @@
     "chokidar": "^3.0.1",
     "fs-extra": "^8.0.1",
     "is-empty": "^1.2.0",
+    "paths-exist": "^0.2.3",
     "pkg-dir": "^4.2.0",
     "tacker": "^0.1.1"
   },

@@ -1,5 +1,4 @@
 import chokidar from "chokidar";
-import { pathsExistSync } from "./utilities";
 import { printLine, printMirror } from "tacker";
 import { linker } from "./linker";
 
@@ -28,7 +27,6 @@ const sampleConfig = {
 
 export function PTOWatcher(oWatcherConfig) {
   printMirror({ oWatcherConfig }, "blue", "grey");
-  pathsExistSync(oWatcherConfig.targets);
   this.parent = oWatcherConfig.parent;
   this.targets = oWatcherConfig.targets;
   this.options = oWatcherConfig.options;
@@ -53,10 +51,8 @@ PTOWatcher.prototype.getDirectories = function getDirectories() {
 
 PTOWatcher.prototype.createWatcher = function createWatcher() {
   const { directoriesToWatch, options } = this;
-  pathsExistSync(directoriesToWatch);
   printMirror({ directoriesToWatch }, "blue", "grey");
   var watcher;
-  //TODO: Add a new sample repo to repogen
   //TODO: Create backup config to test whether this works with 2+ directories
   if (directoriesToWatch.length > 0) {
     watcher = chokidar.watch(directoriesToWatch[0], { ...options });
