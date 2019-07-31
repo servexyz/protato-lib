@@ -1,12 +1,25 @@
 {
   "name": "protato-lib",
   "version": "0.2.5",
+  "description": "HMR. Auto-update parent module's child dependency when you update that child dependency's file",
   "main": "build/main.js",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/servexyz/protato-lib"
   },
+  "keywords": [
+    "servexyz",
+    "protato",
+    "hmr",
+    "hot module",
+    "live reload",
+    "linker",
+    "npm link",
+    "yarn link",
+    "child dependency",
+    "auto update"
+  ],
   "devDependencies": {
     "@ava/babel-preset-stage-4": "^1.1.0",
     "@babel/core": "7.1.2",
